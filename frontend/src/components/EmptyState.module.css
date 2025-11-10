@@ -1,0 +1,63 @@
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.message {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.actionButton {
+  padding: 0.75rem 1.5rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.actionButton:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+
+  .icon {
+    font-size: 2.5rem;
+  }
+
+  .message {
+    font-size: 1rem;
+  }
+}

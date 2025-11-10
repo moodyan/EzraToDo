@@ -1,0 +1,256 @@
+.todoCard {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.75rem;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-out;
+}
+
+.todoCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.todoCard.completed {
+  opacity: 0.7;
+}
+
+.todoContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #3498db;
+  transition: transform 0.2s ease;
+}
+
+.checkbox:hover {
+  transform: scale(1.1);
+}
+
+.contentBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+  word-break: break-word;
+  transition: color 0.2s ease;
+}
+
+.title.completed {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.description {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.priorityBadge {
+  padding: 0.25rem 0.5rem;
+  color: white;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tags {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 0.25rem 0.5rem;
+  background-color: #e8f4f8;
+  color: #2c3e50;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.timestamps {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.button {
+  padding: 0.5rem 0.75rem;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.editButton {
+  background-color: #3498db;
+}
+
+.editButton:hover:not(:disabled) {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.editButton:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.deleteButton {
+  background-color: #e74c3c;
+}
+
+.deleteButton:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Edit Mode */
+.editInput,
+.editTextarea,
+.editSelect {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  border: 2px solid #3498db;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.editInput:focus,
+.editTextarea:focus,
+.editSelect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.editTextarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.editActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.saveButton {
+  background-color: #27ae60;
+}
+
+.saveButton:hover {
+  background-color: #229954;
+}
+
+.cancelButton {
+  background-color: #95a5a6;
+}
+
+.cancelButton:hover {
+  background-color: #7f8c8d;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .todoContent {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .checkbox {
+    align-self: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .button {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .todoCard {
+    padding: 0.75rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .metadata {
+    font-size: 0.8rem;
+  }
+
+  .editActions {
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+  }
+}
