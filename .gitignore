@@ -52,3 +52,19 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# Frontend (Node/React)
+node_modules/
+dist/
+.vite/
+*.local
+.env
+.env.local
+.env.production.local
+.DS_Store
+coverage/
