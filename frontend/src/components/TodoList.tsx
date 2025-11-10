@@ -6,6 +6,7 @@ import { EmptyState } from './EmptyState';
 import { useTodos, useToggleTodo, useDeleteTodo, useUpdateTodo } from '../hooks/useTodos';
 import type { UpdateTodoRequest } from '../types/todo';
 import { priorityLabels } from '../types/todo';
+import styles from './TodoList.module.css';
 
 export function TodoList() {
   const [filterCompleted, setFilterCompleted] = useState<boolean | undefined>(undefined);
@@ -52,63 +53,38 @@ export function TodoList() {
   return (
     <div>
       {/* Filters and Stats */}
-      <div style={{
-        backgroundColor: 'white',
-        padding: '1rem',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        marginBottom: '1.5rem',
-      }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1rem',
-          marginBottom: '1rem',
-        }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3498db' }}>
+      <div className={styles.statsCard}>
+        <div className={styles.statsGrid}>
+          <div className={styles.statItem}>
+            <div className={`${styles.statNumber} ${styles.total}`}>
               {stats.total}
             </div>
-            <div style={{ fontSize: '0.9rem', color: '#666' }}>Total</div>
+            <div className={styles.statLabel}>Total</div>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f39c12' }}>
+          <div className={styles.statItem}>
+            <div className={`${styles.statNumber} ${styles.pending}`}>
               {stats.pending}
             </div>
-            <div style={{ fontSize: '0.9rem', color: '#666' }}>Pending</div>
+            <div className={styles.statLabel}>Pending</div>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#27ae60' }}>
+          <div className={styles.statItem}>
+            <div className={`${styles.statNumber} ${styles.completed}`}>
               {stats.completed}
             </div>
-            <div style={{ fontSize: '0.9rem', color: '#666' }}>Completed</div>
+            <div className={styles.statLabel}>Completed</div>
           </div>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '1rem',
-          paddingTop: '1rem',
-          borderTop: '1px solid #e0e0e0',
-        }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: '500' }}>
-              Filter by Status
-            </label>
+        <div className={styles.filterSection}>
+          <div className={styles.filterGroup}>
+            <label className={styles.filterLabel}>Filter by Status</label>
             <select
               value={filterCompleted === undefined ? 'all' : filterCompleted ? 'completed' : 'pending'}
               onChange={(e) => {
                 const value = e.target.value;
                 setFilterCompleted(value === 'all' ? undefined : value === 'completed');
               }}
-              style={{
-                width: '100%',
-                padding: '0.5rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '4px',
-                backgroundColor: 'white',
-              }}
+              className={styles.filterSelect}
             >
               <option value="all">All Tasks</option>
               <option value="pending">Pending</option>
@@ -116,23 +92,15 @@ export function TodoList() {
             </select>
           </div>
 
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: '500' }}>
-              Filter by Priority
-            </label>
+          <div className={styles.filterGroup}>
+            <label className={styles.filterLabel}>Filter by Priority</label>
             <select
               value={filterPriority ?? 'all'}
               onChange={(e) => {
                 const value = e.target.value;
                 setFilterPriority(value === 'all' ? undefined : Number(value));
               }}
-              style={{
-                width: '100%',
-                padding: '0.5rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '4px',
-                backgroundColor: 'white',
-              }}
+              className={styles.filterSelect}
             >
               <option value="all">All Priorities</option>
               {Object.entries(priorityLabels).map(([value, label]) => (
@@ -153,7 +121,7 @@ export function TodoList() {
           }
         />
       ) : (
-        <div>
+        <div className={styles.todoList}>
           {todos.map((todo) => (
             <TodoItem
               key={todo.id}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { TodoItem as TodoItemType, UpdateTodoRequest } from '../types/todo';
 import { priorityColors, priorityLabels } from '../types/todo';
+import styles from './TodoItem.module.css';
 
 interface TodoItemProps {
   todo: TodoItemType;
@@ -41,82 +42,33 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
 
   if (isEditing) {
     return (
-      <div style={{
-        backgroundColor: 'white',
-        padding: '1rem',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        marginBottom: '0.75rem',
-      }}>
+      <div className={styles.todoCard}>
         <input
           type="text"
           value={editTitle}
           onChange={(e) => setEditTitle(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            marginBottom: '0.5rem',
-            fontSize: '1rem',
-            border: '2px solid #3498db',
-            borderRadius: '4px',
-            boxSizing: 'border-box',
-          }}
+          className={styles.editInput}
         />
         <textarea
           value={editDescription}
           onChange={(e) => setEditDescription(e.target.value)}
           rows={3}
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            marginBottom: '0.5rem',
-            fontSize: '0.9rem',
-            border: '2px solid #e0e0e0',
-            borderRadius: '4px',
-            boxSizing: 'border-box',
-            fontFamily: 'inherit',
-          }}
+          className={styles.editTextarea}
         />
         <select
           value={editPriority}
           onChange={(e) => setEditPriority(Number(e.target.value))}
-          style={{
-            padding: '0.5rem',
-            marginBottom: '0.5rem',
-            marginRight: '0.5rem',
-            border: '2px solid #e0e0e0',
-            borderRadius: '4px',
-          }}
+          className={styles.editSelect}
         >
           {Object.entries(priorityLabels).map(([value, label]) => (
             <option key={value} value={value}>{label}</option>
           ))}
         </select>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button
-            onClick={handleSave}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#27ae60',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
+        <div className={styles.editActions}>
+          <button onClick={handleSave} className={`${styles.button} ${styles.saveButton}`}>
             Save
           </button>
-          <button
-            onClick={handleCancel}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#95a5a6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
+          <button onClick={handleCancel} className={`${styles.button} ${styles.cancelButton}`}>
             Cancel
           </button>
         </div>
@@ -125,64 +77,33 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
   }
 
   return (
-    <div style={{
-      backgroundColor: 'white',
-      padding: '1rem',
-      borderRadius: '8px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      marginBottom: '0.75rem',
-      opacity: todo.isCompleted ? 0.7 : 1,
-      borderLeft: `4px solid ${priorityColors[todo.priority]}`,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+    <div
+      className={`${styles.todoCard} ${todo.isCompleted ? styles.completed : ''}`}
+      style={{ borderLeft: `4px solid ${priorityColors[todo.priority]}` }}
+    >
+      <div className={styles.todoContent}>
         <input
           type="checkbox"
           checked={todo.isCompleted}
           onChange={() => onToggle(todo.id)}
-          style={{
-            width: '20px',
-            height: '20px',
-            marginTop: '2px',
-            cursor: 'pointer',
-          }}
+          className={styles.checkbox}
         />
 
-        <div style={{ flex: 1 }}>
-          <h3 style={{
-            margin: '0 0 0.5rem 0',
-            textDecoration: todo.isCompleted ? 'line-through' : 'none',
-            color: todo.isCompleted ? '#999' : '#333',
-          }}>
+        <div className={styles.contentBody}>
+          <h3 className={`${styles.title} ${todo.isCompleted ? styles.completed : ''}`}>
             {todo.title}
           </h3>
 
           {todo.description && (
-            <p style={{
-              margin: '0 0 0.5rem 0',
-              color: '#666',
-              fontSize: '0.9rem',
-            }}>
+            <p className={styles.description}>
               {todo.description}
             </p>
           )}
 
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '0.5rem',
-            alignItems: 'center',
-            fontSize: '0.85rem',
-            color: '#666',
-          }}>
+          <div className={styles.metadata}>
             <span
-              style={{
-                padding: '0.25rem 0.5rem',
-                backgroundColor: priorityColors[todo.priority],
-                color: 'white',
-                borderRadius: '12px',
-                fontSize: '0.75rem',
-                fontWeight: 'bold',
-              }}
+              className={styles.priorityBadge}
+              style={{ backgroundColor: priorityColors[todo.priority] }}
             >
               {todo.priorityLabel}
             </span>
@@ -192,18 +113,9 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
             )}
 
             {todo.tags.length > 0 && (
-              <div style={{ display: 'flex', gap: '0.25rem' }}>
+              <div className={styles.tags}>
                 {todo.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      padding: '0.25rem 0.5rem',
-                      backgroundColor: '#e8f4f8',
-                      color: '#2c3e50',
-                      borderRadius: '12px',
-                      fontSize: '0.75rem',
-                    }}
-                  >
+                  <span key={index} className={styles.tag}>
                     {tag}
                   </span>
                 ))}
@@ -211,39 +123,23 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
             )}
           </div>
 
-          <div style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: '#999' }}>
+          <div className={styles.timestamps}>
             Created: {formatDate(todo.createdAt)}
             {todo.completedAt && ` • Completed: ${formatDate(todo.completedAt)}`}
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className={styles.actions}>
           <button
             onClick={() => setIsEditing(true)}
             disabled={todo.isCompleted}
-            style={{
-              padding: '0.5rem',
-              backgroundColor: todo.isCompleted ? '#ddd' : '#3498db',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: todo.isCompleted ? 'not-allowed' : 'pointer',
-              fontSize: '0.85rem',
-            }}
+            className={`${styles.button} ${styles.editButton}`}
           >
             Edit
           </button>
           <button
             onClick={() => onDelete(todo.id)}
-            style={{
-              padding: '0.5rem',
-              backgroundColor: '#e74c3c',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '0.85rem',
-            }}
+            className={`${styles.button} ${styles.deleteButton}`}
           >
             Delete
           </button>

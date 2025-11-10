@@ -191,4 +191,300 @@ public class TodoServiceTests
         Assert.Single(highPriorityTodos);
         Assert.Equal("High Priority", highPriorityTodos.First().Title);
     }
+
+    // ====== NEGATIVE SCENARIO TESTS ======
+
+    [Fact]
+    public async Task UpdateAsync_ShouldReturnNull_WhenTodoDoesNotExist()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+
+        // Act
+        var result = await service.UpdateAsync(999, new UpdateTodoRequest
+        {
+            Title = "Updated Title"
+        });
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldReturnFalse_WhenTodoDoesNotExist()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+
+        // Act
+        var result = await service.DeleteAsync(999);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task ToggleCompleteAsync_ShouldReturnNull_WhenTodoDoesNotExist()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+
+        // Act
+        var result = await service.ToggleCompleteAsync(999);
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldTrimWhitespaceFromTitle()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+
+        // Act
+        var result = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "  Test Todo  ",
+            Priority = 1
+        });
+
+        // Assert
+        Assert.Equal("Test Todo", result.Title);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldHandleNullTags()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+
+        // Act
+        var result = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "Test Todo",
+            Priority = 1,
+            Tags = null
+        });
+
+        // Assert
+        Assert.Empty(result.Tags);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldHandleEmptyTags()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+
+        // Act
+        var result = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "Test Todo",
+            Priority = 1,
+            Tags = new List<string>()
+        });
+
+        // Assert
+        Assert.Empty(result.Tags);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldOnlyUpdateProvidedFields()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+        var created = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "Original Title",
+            Description = "Original Description",
+            Priority = 1
+        });
+
+        // Act - Only update priority
+        var result = await service.UpdateAsync(created.Id, new UpdateTodoRequest
+        {
+            Priority = 3
+        });
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("Original Title", result.Title); // Should remain unchanged
+        Assert.Equal("Original Description", result.Description); // Should remain unchanged
+        Assert.Equal(3, result.Priority); // Should be updated
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldReturnEmptyList_WhenNoTodosExist()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+
+        // Act
+        var result = await service.GetAllAsync();
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldReturnEmptyList_WhenNoTodosMatchFilter()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+        await service.CreateAsync(new CreateTodoRequest { Title = "Todo 1", Priority = 0 });
+
+        // Act - Filter for priority 3 (Urgent) when only priority 0 exists
+        var result = await service.GetAllAsync(priority: 3);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ShouldCombineMultipleFilters()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+
+        var todo1 = await service.CreateAsync(new CreateTodoRequest { Title = "Todo 1", Priority = 2 });
+        var todo2 = await service.CreateAsync(new CreateTodoRequest { Title = "Todo 2", Priority = 2 });
+        var todo3 = await service.CreateAsync(new CreateTodoRequest { Title = "Todo 3", Priority = 1 });
+
+        await service.ToggleCompleteAsync(todo1.Id); // Complete first high-priority todo
+
+        // Act - Get completed todos with priority 2
+        var result = await service.GetAllAsync(isCompleted: true, priority: 2);
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal("Todo 1", result.First().Title);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldUpdateCompletedAtWhenMarkingComplete()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+        var created = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "Test Todo",
+            Priority = 1
+        });
+
+        // Act
+        var result = await service.UpdateAsync(created.Id, new UpdateTodoRequest
+        {
+            IsCompleted = true
+        });
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.True(result.IsCompleted);
+        Assert.NotNull(result.CompletedAt);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldClearCompletedAtWhenMarkingIncomplete()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+        var created = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "Test Todo",
+            Priority = 1
+        });
+
+        await service.ToggleCompleteAsync(created.Id); // Mark as complete first
+
+        // Act
+        var result = await service.UpdateAsync(created.Id, new UpdateTodoRequest
+        {
+            IsCompleted = false
+        });
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.False(result.IsCompleted);
+        Assert.Null(result.CompletedAt);
+    }
+
+    [Fact]
+    public async Task CreateAsync_ShouldSetCreatedAtToCurrentTime()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+        var beforeCreate = DateTime.UtcNow.AddSeconds(-1);
+
+        // Act
+        var result = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "Test Todo",
+            Priority = 1
+        });
+
+        var afterCreate = DateTime.UtcNow.AddSeconds(1);
+
+        // Assert
+        Assert.True(result.CreatedAt >= beforeCreate);
+        Assert.True(result.CreatedAt <= afterCreate);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldTrimWhitespaceFromUpdatedFields()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+        var created = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "Original",
+            Priority = 1
+        });
+
+        // Act
+        var result = await service.UpdateAsync(created.Id, new UpdateTodoRequest
+        {
+            Title = "  Updated  ",
+            Description = "  Description  "
+        });
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("Updated", result.Title);
+        Assert.Equal("Description", result.Description);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldActuallyRemoveFromDatabase()
+    {
+        // Arrange
+        using var context = CreateInMemoryContext();
+        var service = new TodoService(context);
+        var created = await service.CreateAsync(new CreateTodoRequest
+        {
+            Title = "Test Todo",
+            Priority = 1
+        });
+
+        // Act
+        await service.DeleteAsync(created.Id);
+
+        // Assert - Verify it's actually gone from the database
+        var allTodos = await service.GetAllAsync();
+        Assert.Empty(allTodos);
+    }
 }
