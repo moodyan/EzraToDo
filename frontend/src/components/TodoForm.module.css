@@ -17,18 +17,19 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ffcf33;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: white;
+  color: #252218;
   font-weight: 600;
   font-size: 1rem;
 }
 
 .toggleButton:hover {
-  background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+  background: #f0c030;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 207, 51, 0.4);
 }
 
 .toggleButton:active {
@@ -41,7 +42,7 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(37, 34, 24, 0.15);
   border-radius: 50%;
   font-size: 1.5rem;
   font-weight: bold;
@@ -49,7 +50,7 @@
 }
 
 .toggleButton:hover .toggleIcon {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(37, 34, 24, 0.25);
   transform: rotate(90deg);
 }
 
@@ -107,9 +108,9 @@
 .input:focus,
 .textarea:focus,
 .select:focus {
-  border-color: #667eea;
+  border-color: #ffcf33;
   outline: none;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 207, 51, 0.2);
   background-color: white;
 }
 
@@ -147,25 +148,25 @@
   padding: 0.875rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
-  color: white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #252218;
+  background: #ffcf33;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 207, 51, 0.3);
   letter-spacing: 0.3px;
 }
 
 .submitButton:hover:not(:disabled) {
-  background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
+  background: #f0c030;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 207, 51, 0.5);
 }
 
 .submitButton:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 207, 51, 0.3);
 }
 
 .submitButton:disabled {

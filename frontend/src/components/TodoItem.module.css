@@ -12,7 +12,7 @@
 .todoCard:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   transform: translateY(-3px);
-  border-color: rgba(102, 126, 234, 0.2);
+  border-color: rgba(255, 207, 51, 0.3);
 }
 
 .todoCard.completed {
@@ -31,7 +31,7 @@
   height: 22px;
   margin-top: 2px;
   cursor: pointer;
-  accent-color: #667eea;
+  accent-color: #ffcf33;
   transition: transform 0.2s ease;
 }
 
@@ -126,14 +126,14 @@
 }
 
 .editButton {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
+  background: #a9d3e9;
+  box-shadow: 0 2px 8px rgba(169, 211, 233, 0.3);
 }
 
 .editButton:hover:not(:disabled) {
-  background: linear-gradient(135deg, #3d99e8 0%, #00d8e8 100%);
+  background: #95c4dd;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+  box-shadow: 0 4px 12px rgba(169, 211, 233, 0.5);
 }
 
 .editButton:disabled {
@@ -144,14 +144,14 @@
 }
 
 .deleteButton {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  box-shadow: 0 2px 8px rgba(250, 112, 154, 0.3);
+  background: #ff4a29;
+  box-shadow: 0 2px 8px rgba(255, 74, 41, 0.3);
 }
 
 .deleteButton:hover {
-  background: linear-gradient(135deg, #e85d88 0%, #ecc92d 100%);
+  background: #e63d1f;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(250, 112, 154, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 74, 41, 0.5);
 }
 
 .button:active:not(:disabled) {
@@ -167,7 +167,7 @@
   padding: 0.75rem 1rem;
   margin-bottom: 0.75rem;
   font-size: 0.95rem;
-  border: 2px solid #667eea;
+  border: 2px solid #ffcf33;
   border-radius: 8px;
   box-sizing: border-box;
   font-family: inherit;
@@ -179,9 +179,9 @@
 .editTextarea:focus,
 .editSelect:focus {
   outline: none;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 0 0 4px rgba(255, 207, 51, 0.2);
   background-color: white;
-  border-color: #5568d3;
+  border-color: #f0c030;
 }
 
 .editTextarea {
@@ -196,23 +196,24 @@
 }
 
 .saveButton {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  box-shadow: 0 2px 8px rgba(17, 153, 142, 0.3);
+  background: #ffcf33;
+  box-shadow: 0 2px 8px rgba(255, 207, 51, 0.3);
+  color: #252218;
 }
 
 .saveButton:hover {
-  background: linear-gradient(135deg, #0e8377 0%, #2fd96b 100%);
+  background: #f0c030;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 207, 51, 0.5);
 }
 
 .cancelButton {
-  background: linear-gradient(135deg, #a8a8a8 0%, #8c8c8c 100%);
+  background: #a8a8a8;
   box-shadow: 0 2px 8px rgba(168, 168, 168, 0.3);
 }
 
 .cancelButton:hover {
-  background: linear-gradient(135deg, #949494 0%, #787878 100%);
+  background: #949494;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(168, 168, 168, 0.4);
 }

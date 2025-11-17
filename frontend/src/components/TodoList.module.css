@@ -25,7 +25,7 @@
   padding: 1rem;
   border-radius: 12px;
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(255, 207, 51, 0.08) 0%, rgba(169, 211, 233, 0.08) 100%);
 }
 
 .statItem:hover {
@@ -37,31 +37,22 @@
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #252218;
 }
 
 .statNumber.total {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffcf33;
+  text-shadow: 1px 1px 0px rgba(37, 34, 24, 0.1);
 }
 
 .statNumber.pending {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ff4a29;
+  text-shadow: 1px 1px 0px rgba(37, 34, 24, 0.1);
 }
 
 .statNumber.completed {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #a9d3e9;
+  text-shadow: 1px 1px 0px rgba(37, 34, 24, 0.1);
 }
 
 .statLabel {
@@ -77,7 +68,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
   padding-top: 1.25rem;
-  border-top: 2px solid rgba(102, 126, 234, 0.1);
+  border-top: 2px solid rgba(255, 207, 51, 0.2);
 }
 
 .filterGroup {
@@ -112,9 +103,9 @@
 }
 
 .filterSelect:focus {
-  border-color: #667eea;
+  border-color: #ffcf33;
   outline: none;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 207, 51, 0.2);
   background-color: white;
 }
 
