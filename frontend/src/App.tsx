@@ -27,7 +27,7 @@ function TodoApp() {
       <div className={styles.container}>
         <header className={styles.header}>
           <h1 className={styles.title}>
-            📋 Todo Task Manager
+            Todo Task Manager
           </h1>
           <p className={styles.subtitle}>
             Production-ready task management application
