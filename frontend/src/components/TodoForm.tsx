@@ -9,6 +9,7 @@ interface TodoFormProps {
 }
 
 export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState(1);
@@ -39,81 +40,95 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <h2 className={styles.formTitle}>Add New Todo</h2>
-
-      <div className={styles.formGroup}>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="What needs to be done?"
-          required
-          maxLength={200}
-          disabled={isLoading}
-          className={styles.input}
-        />
-      </div>
-
-      <div className={styles.formGroup}>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description (optional)"
-          maxLength={1000}
-          disabled={isLoading}
-          rows={3}
-          className={styles.textarea}
-        />
-      </div>
-
-      <div className={styles.gridRow}>
-        <div>
-          <label className={styles.label}>Priority</label>
-          <select
-            value={priority}
-            onChange={(e) => setPriority(Number(e.target.value))}
-            disabled={isLoading}
-            className={styles.select}
-          >
-            {Object.entries(priorityLabels).map(([value, label]) => (
-              <option key={value} value={value}>{label}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className={styles.label}>Due Date</label>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            min={new Date().toISOString().split('T')[0]}
-            disabled={isLoading}
-            className={styles.input}
-          />
-        </div>
-      </div>
-
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Tags (comma-separated)</label>
-        <input
-          type="text"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-          placeholder="work, personal, urgent"
-          disabled={isLoading}
-          className={styles.input}
-        />
-      </div>
-
+    <div className={styles.formContainer}>
       <button
-        type="submit"
-        disabled={isLoading || !title.trim()}
-        className={styles.submitButton}
+        type="button"
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={styles.toggleButton}
       >
-        {isLoading ? 'Adding...' : 'Add Todo'}
+        <span className={styles.toggleIcon}>{isExpanded ? '−' : '+'}</span>
+        <span className={styles.toggleText}>
+          {isExpanded ? 'Hide New Todo Form' : 'Create New Todo'}
+        </span>
       </button>
-    </form>
+
+      {isExpanded && (
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="What needs to be done?"
+              required
+              maxLength={200}
+              disabled={isLoading}
+              className={styles.input}
+              autoFocus
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description (optional)"
+              maxLength={1000}
+              disabled={isLoading}
+              rows={3}
+              className={styles.textarea}
+            />
+          </div>
+
+          <div className={styles.gridRow}>
+            <div>
+              <label className={styles.label}>Priority</label>
+              <select
+                value={priority}
+                onChange={(e) => setPriority(Number(e.target.value))}
+                disabled={isLoading}
+                className={styles.select}
+              >
+                {Object.entries(priorityLabels).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className={styles.label}>Due Date</label>
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                disabled={isLoading}
+                className={styles.input}
+              />
+            </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Tags (comma-separated)</label>
+            <input
+              type="text"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="work, personal, urgent"
+              disabled={isLoading}
+              className={styles.input}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading || !title.trim()}
+            className={styles.submitButton}
+          >
+            {isLoading ? 'Adding...' : 'Add Todo'}
+          </button>
+        </form>
+      )}
+    </div>
   );
 }

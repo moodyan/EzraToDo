@@ -8,9 +8,12 @@ import type { UpdateTodoRequest } from '../types/todo';
 import { priorityLabels } from '../types/todo';
 import styles from './TodoList.module.css';
 
+type SortOption = 'createdAt' | 'priority' | 'dueDate' | 'title';
+
 export function TodoList() {
   const [filterCompleted, setFilterCompleted] = useState<boolean | undefined>(undefined);
   const [filterPriority, setFilterPriority] = useState<number | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<SortOption>('createdAt');
 
   const { data: todos, isLoading, error, refetch } = useTodos(filterCompleted, filterPriority);
   const toggleMutation = useToggleTodo();
@@ -43,6 +46,27 @@ export function TodoList() {
       />
     );
   }
+
+  // Sort todos based on selected option
+  const sortedTodos = todos ? [...todos].sort((a, b) => {
+    switch (sortBy) {
+      case 'priority':
+        // Higher priority (3) should come first
+        return b.priority - a.priority;
+      case 'dueDate':
+        // Sort by due date, with null dates at the end
+        if (!a.dueDate && !b.dueDate) return 0;
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      case 'title':
+        return a.title.localeCompare(b.title);
+      case 'createdAt':
+      default:
+        // Most recent first
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+  }) : [];
 
   const stats = {
     total: todos?.length || 0,
@@ -108,11 +132,25 @@ export function TodoList() {
               ))}
             </select>
           </div>
+
+          <div className={styles.filterGroup}>
+            <label className={styles.filterLabel}>Sort By</label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className={styles.filterSelect}
+            >
+              <option value="createdAt">Date Created (Newest)</option>
+              <option value="priority">Priority (High to Low)</option>
+              <option value="dueDate">Due Date (Earliest)</option>
+              <option value="title">Title (A-Z)</option>
+            </select>
+          </div>
         </div>
       </div>
 
       {/* Todo List */}
-      {!todos || todos.length === 0 ? (
+      {!sortedTodos || sortedTodos.length === 0 ? (
         <EmptyState
           message={
             filterCompleted !== undefined || filterPriority !== undefined
@@ -122,7 +160,7 @@ export function TodoList() {
         />
       ) : (
         <div className={styles.todoList}>
-          {todos.map((todo) => (
+          {sortedTodos.map((todo) => (
             <TodoItem
               key={todo.id}
               todo={todo}
