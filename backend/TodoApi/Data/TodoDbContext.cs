@@ -30,16 +30,17 @@ public class TodoDbContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(1000);
 
+            // Note: Default values are handled in the application layer (TodoService)
+            // rather than database defaults to avoid EF Core sentinel value issues
+            // and to keep business logic in one place
             entity.Property(e => e.IsCompleted)
-                .IsRequired()
-                .HasDefaultValue(false);
+                .IsRequired();
 
             entity.Property(e => e.CreatedAt)
                 .IsRequired();
 
             entity.Property(e => e.Priority)
-                .IsRequired()
-                .HasDefaultValue(TodoPriority.Medium);
+                .IsRequired();
 
             entity.Property(e => e.Tags)
                 .HasMaxLength(500);

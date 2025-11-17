@@ -58,22 +58,47 @@ frontend/src/
 
 ### Backend Setup
 
+#### Option 1: Automated Setup (Recommended)
+
+**On Linux/Mac:**
+```bash
+cd backend/TodoApi
+chmod +x setup-database.sh
+./setup-database.sh
+dotnet run
+```
+
+**On Windows:**
+```bash
+cd backend/TodoApi
+setup-database.bat
+dotnet run
+```
+
+#### Option 2: Manual Setup
+
 1. Navigate to the backend directory:
 ```bash
 cd backend/TodoApi
 ```
 
-2. Restore dependencies:
+2. Update EF Core tools (if needed):
+```bash
+dotnet tool update --global dotnet-ef --version 8.0.0
+```
+
+3. Restore dependencies:
 ```bash
 dotnet restore
 ```
 
-3. Apply database migrations (creates SQLite database):
+4. Create and apply database migrations:
 ```bash
+dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 
-4. Run the API:
+5. Run the API:
 ```bash
 dotnet run
 ```
@@ -81,6 +106,8 @@ dotnet run
 The API will be available at `http://localhost:5000`
 - Swagger UI: `http://localhost:5000` (root path)
 - API Endpoints: `http://localhost:5000/api/todos`
+
+**Note:** If you get EF tools version warnings, make sure you've updated to version 8.0.0 using the command in step 2.
 
 ### Frontend Setup
 
