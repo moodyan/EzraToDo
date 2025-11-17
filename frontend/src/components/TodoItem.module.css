@@ -132,7 +132,6 @@
 
 .editButton:hover:not(:disabled) {
   background: #95c4dd;
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(169, 211, 233, 0.5);
 }
 
@@ -150,7 +149,6 @@
 
 .deleteButton:hover {
   background: #e63d1f;
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 74, 41, 0.5);
 }
 
@@ -217,7 +215,6 @@
 
 .saveButton:hover {
   background: #f0c030;
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 207, 51, 0.5);
 }
 
@@ -228,7 +225,6 @@
 
 .cancelButton:hover {
   background: #949494;
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(168, 168, 168, 0.4);
 }
 
