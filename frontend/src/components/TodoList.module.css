@@ -1,64 +1,83 @@
 .statsCard {
   background-color: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1.5rem;
-  transition: box-shadow 0.3s ease;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .statsCard:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .statItem {
   text-align: center;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: transform 0.2s ease;
+  padding: 1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
 }
 
 .statItem:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .statNumber {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .statNumber.total {
-  color: #3498db;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .statNumber.pending {
-  color: #f39c12;
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .statNumber.completed {
-  color: #27ae60;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .statLabel {
-  font-size: 0.9rem;
-  color: #666;
-  font-weight: 500;
+  font-size: 0.875rem;
+  color: #3d4852;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .filterSection {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e0e0e0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid rgba(102, 126, 234, 0.1);
 }
 
 .filterGroup {
@@ -69,30 +88,34 @@
 .filterLabel {
   display: block;
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #555;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #3d4852;
+  letter-spacing: 0.2px;
 }
 
 .filterSelect {
   width: 100%;
-  padding: 0.5rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 4px;
-  background-color: white;
-  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e8ecf1;
+  border-radius: 8px;
+  background-color: #fafbfc;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .filterSelect:hover {
-  border-color: #cbd5e0;
+  border-color: #d0d7de;
+  background-color: white;
 }
 
 .filterSelect:focus {
-  border-color: #3498db;
+  border-color: #667eea;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  background-color: white;
 }
 
 .todoList {
@@ -122,6 +145,12 @@
     font-size: 0.8rem;
   }
 
+  .filterSection {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
   .filterSection {
     grid-template-columns: 1fr;
   }

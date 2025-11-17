@@ -1,20 +1,23 @@
 .todoCard {
   background-color: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 0.75rem;
-  transition: all 0.3s ease;
-  animation: slideIn 0.3s ease-out;
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideIn 0.4s ease-out;
 }
 
 .todoCard:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+  border-color: rgba(102, 126, 234, 0.2);
 }
 
 .todoCard.completed {
-  opacity: 0.7;
+  opacity: 0.65;
+  background-color: #fafbfc;
 }
 
 .todoContent {
@@ -24,16 +27,16 @@
 }
 
 .checkbox {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   margin-top: 2px;
   cursor: pointer;
-  accent-color: #3498db;
+  accent-color: #667eea;
   transition: transform 0.2s ease;
 }
 
 .checkbox:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .contentBody {
@@ -110,45 +113,50 @@
 }
 
 .button {
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 1rem;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
   white-space: nowrap;
+  letter-spacing: 0.2px;
 }
 
 .editButton {
-  background-color: #3498db;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
 }
 
 .editButton:hover:not(:disabled) {
-  background-color: #2980b9;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+  background: linear-gradient(135deg, #3d99e8 0%, #00d8e8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
 }
 
 .editButton:disabled {
-  background-color: #ddd;
+  background: #cbd5e0;
   cursor: not-allowed;
   opacity: 0.6;
+  box-shadow: none;
 }
 
 .deleteButton {
-  background-color: #e74c3c;
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  box-shadow: 0 2px 8px rgba(250, 112, 154, 0.3);
 }
 
 .deleteButton:hover {
-  background-color: #c0392b;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+  background: linear-gradient(135deg, #e85d88 0%, #ecc92d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(250, 112, 154, 0.4);
 }
 
 .button:active:not(:disabled) {
   transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Edit Mode */
@@ -156,21 +164,24 @@
 .editTextarea,
 .editSelect {
   width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  border: 2px solid #3498db;
-  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  border: 2px solid #667eea;
+  border-radius: 8px;
   box-sizing: border-box;
   font-family: inherit;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  background-color: #fafbfc;
 }
 
 .editInput:focus,
 .editTextarea:focus,
 .editSelect:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+  background-color: white;
+  border-color: #5568d3;
 }
 
 .editTextarea {
@@ -185,19 +196,25 @@
 }
 
 .saveButton {
-  background-color: #27ae60;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  box-shadow: 0 2px 8px rgba(17, 153, 142, 0.3);
 }
 
 .saveButton:hover {
-  background-color: #229954;
+  background: linear-gradient(135deg, #0e8377 0%, #2fd96b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4);
 }
 
 .cancelButton {
-  background-color: #95a5a6;
+  background: linear-gradient(135deg, #a8a8a8 0%, #8c8c8c 100%);
+  box-shadow: 0 2px 8px rgba(168, 168, 168, 0.3);
 }
 
 .cancelButton:hover {
-  background-color: #7f8c8d;
+  background: linear-gradient(135deg, #949494 0%, #787878 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 168, 168, 0.4);
 }
 
 @keyframes slideIn {
