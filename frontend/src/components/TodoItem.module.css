@@ -175,6 +175,16 @@
   background-color: #fafbfc;
 }
 
+.editSelect {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ffcf33' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 10px;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
 .editInput:focus,
 .editTextarea:focus,
 .editSelect:focus {
@@ -182,6 +192,10 @@
   box-shadow: 0 0 0 4px rgba(255, 207, 51, 0.2);
   background-color: white;
   border-color: #f0c030;
+}
+
+.editSelect:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23f0c030' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
 }
 
 .editTextarea {
