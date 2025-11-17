@@ -68,20 +68,20 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure middleware pipeline
-if (app.Environment.IsDevelopment())
+// Enable Swagger for demo/documentation purposes
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo API v1");
-        c.RoutePrefix = string.Empty; // Swagger UI at root
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo API v1");
+    c.RoutePrefix = string.Empty; // Swagger UI at root
+});
 
 // Global exception handling
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-app.UseHttpsRedirection();
+// Note: HTTPS redirection disabled for demo/development purposes
+// In production, uncomment this and configure SSL certificates
+// app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
 
