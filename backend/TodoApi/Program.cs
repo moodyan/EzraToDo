@@ -79,7 +79,9 @@ app.UseSwaggerUI(c =>
 // Global exception handling
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-app.UseHttpsRedirection();
+// Note: HTTPS redirection disabled for demo/development purposes
+// In production, uncomment this and configure SSL certificates
+// app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
 
