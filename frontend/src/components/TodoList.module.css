@@ -39,17 +39,17 @@
 }
 
 .statNumber.total {
-  color: #ffcf33;
-  text-shadow: 1px 1px 0px rgba(37, 34, 24, 0.1);
+  color: #252218;
+  text-shadow: 1px 1px 0px rgba(255, 207, 51, 0.3);
 }
 
 .statNumber.pending {
-  color: #ff4a29;
+  color: #f0a500;
   text-shadow: 1px 1px 0px rgba(37, 34, 24, 0.1);
 }
 
 .statNumber.completed {
-  color: #a9d3e9;
+  color: #b8a888;
   text-shadow: 1px 1px 0px rgba(37, 34, 24, 0.1);
 }
 

@@ -50,8 +50,8 @@ export const priorityLabels: Record<number, string> = {
 };
 
 export const priorityColors: Record<number, string> = {
-  0: '#6c757d',
-  1: '#0d6efd',
-  2: '#fd7e14',
-  3: '#dc3545',
+  0: '#b8a888',  // Low - muted tan/beige
+  1: '#ffcf33',  // Medium - main yellow
+  2: '#f0a500',  // High - darker golden yellow
+  3: '#252218',  // Urgent - dark brown (text color)
 };

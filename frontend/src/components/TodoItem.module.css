@@ -126,13 +126,13 @@
 }
 
 .editButton {
-  background: #a9d3e9;
-  box-shadow: 0 2px 8px rgba(169, 211, 233, 0.3);
+  background: #d4c4a8;
+  box-shadow: 0 2px 8px rgba(212, 196, 168, 0.3);
 }
 
 .editButton:hover:not(:disabled) {
-  background: #95c4dd;
-  box-shadow: 0 4px 12px rgba(169, 211, 233, 0.5);
+  background: #c4b498;
+  box-shadow: 0 4px 12px rgba(212, 196, 168, 0.5);
 }
 
 .editButton:disabled {
@@ -143,13 +143,13 @@
 }
 
 .deleteButton {
-  background: #ff4a29;
-  box-shadow: 0 2px 8px rgba(255, 74, 41, 0.3);
+  background: #3d3328;
+  box-shadow: 0 2px 8px rgba(61, 51, 40, 0.3);
 }
 
 .deleteButton:hover {
-  background: #e63d1f;
-  box-shadow: 0 4px 12px rgba(255, 74, 41, 0.5);
+  background: #252218;
+  box-shadow: 0 4px 12px rgba(37, 34, 24, 0.5);
 }
 
 .button:active:not(:disabled) {
