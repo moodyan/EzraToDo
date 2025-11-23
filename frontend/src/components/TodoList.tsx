@@ -3,6 +3,7 @@ import { TodoItem } from './TodoItem';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
 import { EmptyState } from './EmptyState';
+import { CustomSelect } from './CustomSelect';
 import { useTodos, useToggleTodo, useDeleteTodo, useUpdateTodo } from '../hooks/useTodos';
 import type { UpdateTodoRequest } from '../types/todo';
 import { priorityLabels } from '../types/todo';
@@ -102,49 +103,51 @@ export function TodoList() {
         <div className={styles.filterSection}>
           <div className={styles.filterGroup}>
             <label className={styles.filterLabel}>Filter by Status</label>
-            <select
+            <CustomSelect
               value={filterCompleted === undefined ? 'all' : filterCompleted ? 'completed' : 'pending'}
-              onChange={(e) => {
-                const value = e.target.value;
+              onChange={(value) => {
                 setFilterCompleted(value === 'all' ? undefined : value === 'completed');
               }}
+              options={[
+                { value: 'all', label: 'All Tasks' },
+                { value: 'pending', label: 'Pending' },
+                { value: 'completed', label: 'Completed' },
+              ]}
               className={styles.filterSelect}
-            >
-              <option value="all">All Tasks</option>
-              <option value="pending">Pending</option>
-              <option value="completed">Completed</option>
-            </select>
+            />
           </div>
 
           <div className={styles.filterGroup}>
             <label className={styles.filterLabel}>Filter by Priority</label>
-            <select
+            <CustomSelect
               value={filterPriority ?? 'all'}
-              onChange={(e) => {
-                const value = e.target.value;
+              onChange={(value) => {
                 setFilterPriority(value === 'all' ? undefined : Number(value));
               }}
+              options={[
+                { value: 'all', label: 'All Priorities' },
+                ...Object.entries(priorityLabels).map(([value, label]) => ({
+                  value: Number(value),
+                  label,
+                })),
+              ]}
               className={styles.filterSelect}
-            >
-              <option value="all">All Priorities</option>
-              {Object.entries(priorityLabels).map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
-            </select>
+            />
           </div>
 
           <div className={styles.filterGroup}>
             <label className={styles.filterLabel}>Sort By</label>
-            <select
+            <CustomSelect
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              onChange={(value) => setSortBy(value as SortOption)}
+              options={[
+                { value: 'createdAt', label: 'Date Created (Newest)' },
+                { value: 'priority', label: 'Priority (High to Low)' },
+                { value: 'dueDate', label: 'Due Date (Earliest)' },
+                { value: 'title', label: 'Title (A-Z)' },
+              ]}
               className={styles.filterSelect}
-            >
-              <option value="createdAt">Date Created (Newest)</option>
-              <option value="priority">Priority (High to Low)</option>
-              <option value="dueDate">Due Date (Earliest)</option>
-              <option value="title">Title (A-Z)</option>
-            </select>
+            />
           </div>
         </div>
       </div>
