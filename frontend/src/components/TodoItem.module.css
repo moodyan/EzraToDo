@@ -11,7 +11,6 @@
 
 .todoCard:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  transform: translateY(-3px);
   border-color: rgba(255, 207, 51, 0.3);
 }
 
@@ -37,6 +36,11 @@
 
 .checkbox:hover {
   transform: scale(1.15);
+}
+
+.checkbox:focus {
+  outline: 2px solid #ffcf33;
+  outline-offset: 2px;
 }
 
 .contentBody {
