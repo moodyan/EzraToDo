@@ -63,6 +63,7 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
             value: Number(value),
             label,
           }))}
+          className={styles.editSelect}
         />
         <div className={styles.editActions}>
           <button onClick={handleSave} className={`${styles.button} ${styles.saveButton}`}>
