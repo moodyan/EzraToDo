@@ -196,6 +196,23 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23f0c030' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
 }
 
+.editSelect option {
+  background-color: white;
+  color: #252218;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+}
+
+.editSelect option:hover {
+  background-color: #fffef2;
+}
+
+.editSelect option:checked {
+  background-color: #ffcf33;
+  color: #252218;
+  font-weight: 600;
+}
+
 .editTextarea {
   resize: vertical;
   min-height: 80px;
