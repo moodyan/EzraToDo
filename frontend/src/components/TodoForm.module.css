@@ -129,10 +129,6 @@
   font-size: 0.95rem;
 }
 
-.select option:hover {
-  background-color: #fffef2;
-}
-
 .select option:checked {
   background-color: #ffcf33;
   color: #252218;

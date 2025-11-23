@@ -121,10 +121,6 @@
   font-size: 0.95rem;
 }
 
-.filterSelect option:hover {
-  background-color: #fffef2;
-}
-
 .filterSelect option:checked {
   background-color: #ffcf33;
   color: #252218;
