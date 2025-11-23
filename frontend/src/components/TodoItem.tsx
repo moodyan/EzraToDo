@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Select } from './Select';
 import type { TodoItem as TodoItemType, UpdateTodoRequest } from '../types/todo';
 import { priorityColors, priorityLabels } from '../types/todo';
 import styles from './TodoItem.module.css';
@@ -55,15 +56,14 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
           rows={3}
           className={styles.editTextarea}
         />
-        <select
+        <Select
           value={editPriority}
-          onChange={(e) => setEditPriority(Number(e.target.value))}
-          className={styles.editSelect}
-        >
-          {Object.entries(priorityLabels).map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
+          onChange={(value) => setEditPriority(Number(value))}
+          options={Object.entries(priorityLabels).map(([value, label]) => ({
+            value: Number(value),
+            label,
+          }))}
+        />
         <div className={styles.editActions}>
           <button onClick={handleSave} className={`${styles.button} ${styles.saveButton}`}>
             Save

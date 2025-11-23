@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { CustomSelect } from './CustomSelect';
+import { Select } from './Select';
 import { priorityLabels } from '../types/todo';
 import type { CreateTodoRequest } from '../types/todo';
 import styles from './TodoForm.module.css';
@@ -84,16 +84,15 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
           <div className={styles.gridRow}>
             <div>
               <label className={styles.label}>Priority</label>
-              <select
+              <Select
                 value={priority}
-                onChange={(e) => setPriority(Number(e.target.value))}
+                onChange={(value) => setPriority(Number(value))}
                 disabled={isLoading}
-                className={styles.select}
-              >
-                {Object.entries(priorityLabels).map(([value, label]) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </select>
+                options={Object.entries(priorityLabels).map(([value, label]) => ({
+                  value: Number(value),
+                  label,
+                }))}
+              />
             </div>
 
             <div>

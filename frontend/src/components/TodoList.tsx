@@ -3,7 +3,7 @@ import { TodoItem } from './TodoItem';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
 import { EmptyState } from './EmptyState';
-import { CustomSelect } from './CustomSelect';
+import { Select } from './Select';
 import { useTodos, useToggleTodo, useDeleteTodo, useUpdateTodo } from '../hooks/useTodos';
 import type { UpdateTodoRequest } from '../types/todo';
 import { priorityLabels } from '../types/todo';
@@ -103,7 +103,7 @@ export function TodoList() {
         <div className={styles.filterSection}>
           <div className={styles.filterGroup}>
             <label className={styles.filterLabel}>Filter by Status</label>
-            <CustomSelect
+            <Select
               value={filterCompleted === undefined ? 'all' : filterCompleted ? 'completed' : 'pending'}
               onChange={(value) => {
                 setFilterCompleted(value === 'all' ? undefined : value === 'completed');
@@ -113,13 +113,12 @@ export function TodoList() {
                 { value: 'pending', label: 'Pending' },
                 { value: 'completed', label: 'Completed' },
               ]}
-              className={styles.filterSelect}
             />
           </div>
 
           <div className={styles.filterGroup}>
             <label className={styles.filterLabel}>Filter by Priority</label>
-            <CustomSelect
+            <Select
               value={filterPriority ?? 'all'}
               onChange={(value) => {
                 setFilterPriority(value === 'all' ? undefined : Number(value));
@@ -131,13 +130,12 @@ export function TodoList() {
                   label,
                 })),
               ]}
-              className={styles.filterSelect}
             />
           </div>
 
           <div className={styles.filterGroup}>
             <label className={styles.filterLabel}>Sort By</label>
-            <CustomSelect
+            <Select
               value={sortBy}
               onChange={(value) => setSortBy(value as SortOption)}
               options={[
@@ -146,7 +144,6 @@ export function TodoList() {
                 { value: 'dueDate', label: 'Due Date (Earliest)' },
                 { value: 'title', label: 'Title (A-Z)' },
               ]}
-              className={styles.filterSelect}
             />
           </div>
         </div>
