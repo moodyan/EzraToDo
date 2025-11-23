@@ -11,7 +11,11 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ value, onChange, disabled = false, minDate, className = '' }: DatePickerProps) {
-  const selectedDate = value ? new Date(value) : null;
+  // Parse date string in local timezone to avoid timezone offset issues
+  const selectedDate = value ? (() => {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  })() : null;
 
   const handleChange = (date: Date | null) => {
     if (date) {
