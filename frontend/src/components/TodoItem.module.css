@@ -176,6 +176,20 @@
   background-color: #fafbfc;
 }
 
+.editInput[type="date"] {
+  cursor: pointer;
+}
+
+.editInput[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: opacity(0.6);
+  transition: filter 0.2s ease;
+}
+
+.editInput[type="date"]:hover::-webkit-calendar-picker-indicator {
+  filter: opacity(1);
+}
+
 .editInput:focus,
 .editTextarea:focus {
   outline: none;
@@ -184,8 +198,24 @@
   border-color: #f0c030;
 }
 
-.editSelect {
+.editGridRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
   margin-bottom: 0.75rem;
+}
+
+.editLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #3d4852;
+  letter-spacing: 0.2px;
+}
+
+.editSelect {
+  margin-bottom: 0;
 }
 
 .editTextarea {
@@ -250,6 +280,12 @@
   .button {
     flex: 1;
     min-width: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .editGridRow {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -16,6 +16,7 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
   const [editPriority, setEditPriority] = useState(todo.priority);
+  const [editDueDate, setEditDueDate] = useState(todo.dueDate ? todo.dueDate.split('T')[0] : '');
 
   const handleSave = () => {
     if (!editTitle.trim()) return;
@@ -24,6 +25,7 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
       title: editTitle.trim(),
       description: editDescription.trim() || undefined,
       priority: editPriority,
+      dueDate: editDueDate || undefined,
     });
 
     setIsEditing(false);
@@ -33,6 +35,7 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
     setEditTitle(todo.title);
     setEditDescription(todo.description || '');
     setEditPriority(todo.priority);
+    setEditDueDate(todo.dueDate ? todo.dueDate.split('T')[0] : '');
     setIsEditing(false);
   };
 
@@ -56,15 +59,30 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
           rows={3}
           className={styles.editTextarea}
         />
-        <Select
-          value={editPriority}
-          onChange={(value) => setEditPriority(Number(value))}
-          options={Object.entries(priorityLabels).map(([value, label]) => ({
-            value: Number(value),
-            label,
-          }))}
-          className={styles.editSelect}
-        />
+        <div className={styles.editGridRow}>
+          <div>
+            <label className={styles.editLabel}>Priority</label>
+            <Select
+              value={editPriority}
+              onChange={(value) => setEditPriority(Number(value))}
+              options={Object.entries(priorityLabels).map(([value, label]) => ({
+                value: Number(value),
+                label,
+              }))}
+              className={styles.editSelect}
+            />
+          </div>
+          <div>
+            <label className={styles.editLabel}>Due Date</label>
+            <input
+              type="date"
+              value={editDueDate}
+              onChange={(e) => setEditDueDate(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+              className={styles.editInput}
+            />
+          </div>
+        </div>
         <div className={styles.editActions}>
           <button onClick={handleSave} className={`${styles.button} ${styles.saveButton}`}>
             Save
