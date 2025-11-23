@@ -38,6 +38,7 @@ export function DatePicker({ value, onChange, disabled = false, minDate, classNa
         calendarClassName={styles.calendar}
         isClearable
         showPopperArrow={false}
+        fixedHeight
       />
     </div>
   );
