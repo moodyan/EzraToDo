@@ -92,20 +92,6 @@
   background-color: #fafbfc;
 }
 
-.input[type="date"] {
-  cursor: pointer;
-}
-
-.input[type="date"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  filter: opacity(0.6);
-  transition: filter 0.2s ease;
-}
-
-.input[type="date"]:hover::-webkit-calendar-picker-indicator {
-  filter: opacity(1);
-}
-
 .select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23252218' d='M6 8L0 0h12z'/%3E%3C/svg%3E");

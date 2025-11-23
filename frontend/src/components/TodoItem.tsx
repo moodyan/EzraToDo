@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Select } from './Select';
+import { DatePicker } from './DatePicker';
 import type { TodoItem as TodoItemType, UpdateTodoRequest } from '../types/todo';
 import { priorityColors, priorityLabels } from '../types/todo';
 import styles from './TodoItem.module.css';
@@ -74,12 +75,10 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
           </div>
           <div>
             <label className={styles.editLabel}>Due Date</label>
-            <input
-              type="date"
+            <DatePicker
               value={editDueDate}
-              onChange={(e) => setEditDueDate(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-              className={styles.editInput}
+              onChange={setEditDueDate}
+              minDate={new Date()}
             />
           </div>
         </div>

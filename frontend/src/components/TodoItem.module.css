@@ -176,20 +176,6 @@
   background-color: #fafbfc;
 }
 
-.editInput[type="date"] {
-  cursor: pointer;
-}
-
-.editInput[type="date"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  filter: opacity(0.6);
-  transition: filter 0.2s ease;
-}
-
-.editInput[type="date"]:hover::-webkit-calendar-picker-indicator {
-  filter: opacity(1);
-}
-
 .editInput:focus,
 .editTextarea:focus {
   outline: none;

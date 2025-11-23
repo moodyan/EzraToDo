@@ -1,5 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { Select } from './Select';
+import { DatePicker } from './DatePicker';
 import { priorityLabels } from '../types/todo';
 import type { CreateTodoRequest } from '../types/todo';
 import styles from './TodoForm.module.css';
@@ -97,13 +98,11 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
 
             <div>
               <label className={styles.label}>Due Date</label>
-              <input
-                type="date"
+              <DatePicker
                 value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
+                onChange={setDueDate}
                 disabled={isLoading}
-                className={styles.input}
+                minDate={new Date()}
               />
             </div>
           </div>
