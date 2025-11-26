@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { Select } from './Select';
+import { DatePicker } from './DatePicker';
+import { getPriorityOptions, formatDate } from '../utils/todoHelpers';
 import type { TodoItem as TodoItemType, UpdateTodoRequest } from '../types/todo';
-import { priorityColors, priorityLabels } from '../types/todo';
+import { priorityColors } from '../types/todo';
 import styles from './TodoItem.module.css';
 
 interface TodoItemProps {
@@ -15,6 +18,7 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editDescription, setEditDescription] = useState(todo.description || '');
   const [editPriority, setEditPriority] = useState(todo.priority);
+  const [editDueDate, setEditDueDate] = useState(todo.dueDate ? todo.dueDate.split('T')[0] : '');
 
   const handleSave = () => {
     if (!editTitle.trim()) return;
@@ -23,6 +27,7 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
       title: editTitle.trim(),
       description: editDescription.trim() || undefined,
       priority: editPriority,
+      dueDate: editDueDate || undefined,
     });
 
     setIsEditing(false);
@@ -32,12 +37,8 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
     setEditTitle(todo.title);
     setEditDescription(todo.description || '');
     setEditPriority(todo.priority);
+    setEditDueDate(todo.dueDate ? todo.dueDate.split('T')[0] : '');
     setIsEditing(false);
-  };
-
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return null;
-    return new Date(dateString).toLocaleDateString();
   };
 
   if (isEditing) {
@@ -55,15 +56,25 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
           rows={3}
           className={styles.editTextarea}
         />
-        <select
-          value={editPriority}
-          onChange={(e) => setEditPriority(Number(e.target.value))}
-          className={styles.editSelect}
-        >
-          {Object.entries(priorityLabels).map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
+        <div className={styles.editGridRow}>
+          <div>
+            <label className={styles.editLabel}>Priority</label>
+            <Select
+              value={editPriority}
+              onChange={(value) => setEditPriority(Number(value))}
+              options={getPriorityOptions()}
+              className={styles.editSelect}
+            />
+          </div>
+          <div>
+            <label className={styles.editLabel}>Due Date</label>
+            <DatePicker
+              value={editDueDate}
+              onChange={setEditDueDate}
+              minDate={new Date()}
+            />
+          </div>
+        </div>
         <div className={styles.editActions}>
           <button onClick={handleSave} className={`${styles.button} ${styles.saveButton}`}>
             Save

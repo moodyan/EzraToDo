@@ -1,35 +1,39 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { TodoItem } from './TodoItem';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
 import { EmptyState } from './EmptyState';
+import { Select } from './Select';
 import { useTodos, useToggleTodo, useDeleteTodo, useUpdateTodo } from '../hooks/useTodos';
+import { getPriorityOptions } from '../utils/todoHelpers';
 import type { UpdateTodoRequest } from '../types/todo';
-import { priorityLabels } from '../types/todo';
 import styles from './TodoList.module.css';
+
+type SortOption = 'createdAt' | 'priority' | 'dueDate' | 'title';
 
 export function TodoList() {
   const [filterCompleted, setFilterCompleted] = useState<boolean | undefined>(undefined);
   const [filterPriority, setFilterPriority] = useState<number | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<SortOption>('createdAt');
 
   const { data: todos, isLoading, error, refetch } = useTodos(filterCompleted, filterPriority);
   const toggleMutation = useToggleTodo();
   const deleteMutation = useDeleteTodo();
   const updateMutation = useUpdateTodo();
 
-  const handleToggle = (id: number) => {
+  const handleToggle = useCallback((id: number) => {
     toggleMutation.mutate(id);
-  };
+  }, [toggleMutation]);
 
-  const handleDelete = (id: number) => {
-    if (confirm('Are you sure you want to delete this todo?')) {
+  const handleDelete = useCallback((id: number) => {
+    if (window.confirm('Are you sure you want to delete this todo?')) {
       deleteMutation.mutate(id);
     }
-  };
+  }, [deleteMutation]);
 
-  const handleUpdate = (id: number, data: UpdateTodoRequest) => {
+  const handleUpdate = useCallback((id: number, data: UpdateTodoRequest) => {
     updateMutation.mutate({ id, data });
-  };
+  }, [updateMutation]);
 
   const hasActiveFilters = filterCompleted !== undefined || filterPriority !== undefined;
 
@@ -50,6 +54,31 @@ export function TodoList() {
       />
     );
   }
+
+  // Sort todos based on selected option (memoized for performance)
+  const sortedTodos = useMemo(() => {
+    if (!todos) return [];
+
+    return [...todos].sort((a, b) => {
+      switch (sortBy) {
+        case 'priority':
+          // Higher priority (3) should come first
+          return b.priority - a.priority;
+        case 'dueDate':
+          // Sort by due date, with null dates at the end
+          if (!a.dueDate && !b.dueDate) return 0;
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        case 'title':
+          return a.title.localeCompare(b.title);
+        case 'createdAt':
+        default:
+          // Most recent first
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+    });
+  }, [todos, sortBy]);
 
   const stats = {
     total: todos?.length || 0,
@@ -85,35 +114,45 @@ export function TodoList() {
         <div className={styles.filterSection}>
           <div className={styles.filterGroup}>
             <label className={styles.filterLabel}>Filter by Status</label>
-            <select
+            <Select
               value={filterCompleted === undefined ? 'all' : filterCompleted ? 'completed' : 'pending'}
-              onChange={(e) => {
-                const value = e.target.value;
+              onChange={(value) => {
                 setFilterCompleted(value === 'all' ? undefined : value === 'completed');
               }}
-              className={styles.filterSelect}
-            >
-              <option value="all">All Tasks</option>
-              <option value="pending">Pending</option>
-              <option value="completed">Completed</option>
-            </select>
+              options={[
+                { value: 'all', label: 'All Tasks' },
+                { value: 'pending', label: 'Pending' },
+                { value: 'completed', label: 'Completed' },
+              ]}
+            />
           </div>
 
           <div className={styles.filterGroup}>
             <label className={styles.filterLabel}>Filter by Priority</label>
-            <select
+            <Select
               value={filterPriority ?? 'all'}
-              onChange={(e) => {
-                const value = e.target.value;
+              onChange={(value) => {
                 setFilterPriority(value === 'all' ? undefined : Number(value));
               }}
-              className={styles.filterSelect}
-            >
-              <option value="all">All Priorities</option>
-              {Object.entries(priorityLabels).map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
-            </select>
+              options={[
+                { value: 'all', label: 'All Priorities' },
+                ...getPriorityOptions(),
+              ]}
+            />
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label className={styles.filterLabel}>Sort By</label>
+            <Select
+              value={sortBy}
+              onChange={(value) => setSortBy(value as SortOption)}
+              options={[
+                { value: 'createdAt', label: 'Date Created (Newest)' },
+                { value: 'priority', label: 'Priority (High to Low)' },
+                { value: 'dueDate', label: 'Due Date (Earliest)' },
+                { value: 'title', label: 'Title (A-Z)' },
+              ]}
+            />
           </div>
         </div>
 
@@ -130,7 +169,7 @@ export function TodoList() {
       </div>
 
       {/* Todo List */}
-      {!todos || todos.length === 0 ? (
+      {!sortedTodos || sortedTodos.length === 0 ? (
         <EmptyState
           message={
             filterCompleted !== undefined || filterPriority !== undefined
@@ -140,7 +179,7 @@ export function TodoList() {
         />
       ) : (
         <div className={styles.todoList}>
-          {todos.map((todo) => (
+          {sortedTodos.map((todo) => (
             <TodoItem
               key={todo.id}
               todo={todo}

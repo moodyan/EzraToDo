@@ -1,5 +1,7 @@
 import { useState, FormEvent } from 'react';
-import { priorityLabels } from '../types/todo';
+import { Select } from './Select';
+import { DatePicker } from './DatePicker';
+import { getPriorityOptions } from '../utils/todoHelpers';
 import type { CreateTodoRequest } from '../types/todo';
 import styles from './TodoForm.module.css';
 
@@ -9,6 +11,7 @@ interface TodoFormProps {
 }
 
 export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState(1);
@@ -39,81 +42,98 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <h2 className={styles.formTitle}>Add New Todo</h2>
-
-      <div className={styles.formGroup}>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="What needs to be done?"
-          required
-          maxLength={200}
-          disabled={isLoading}
-          className={styles.input}
-        />
-      </div>
-
-      <div className={styles.formGroup}>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description (optional)"
-          maxLength={1000}
-          disabled={isLoading}
-          rows={3}
-          className={styles.textarea}
-        />
-      </div>
-
-      <div className={styles.gridRow}>
-        <div>
-          <label className={styles.label}>Priority</label>
-          <select
-            value={priority}
-            onChange={(e) => setPriority(Number(e.target.value))}
-            disabled={isLoading}
-            className={styles.select}
-          >
-            {Object.entries(priorityLabels).map(([value, label]) => (
-              <option key={value} value={value}>{label}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className={styles.label}>Due Date</label>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            min={new Date().toISOString().split('T')[0]}
-            disabled={isLoading}
-            className={styles.input}
-          />
-        </div>
-      </div>
-
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Tags (comma-separated)</label>
-        <input
-          type="text"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-          placeholder="work, personal, urgent"
-          disabled={isLoading}
-          className={styles.input}
-        />
-      </div>
-
+    <div className={styles.formContainer}>
       <button
-        type="submit"
-        disabled={isLoading || !title.trim()}
-        className={styles.submitButton}
+        type="button"
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={styles.toggleButton}
+        aria-expanded={isExpanded}
+        aria-controls="todo-form"
       >
-        {isLoading ? 'Adding...' : 'Add Todo'}
+        <span className={styles.toggleIcon} aria-hidden="true">{isExpanded ? '−' : '+'}</span>
+        <span className={styles.toggleText}>
+          {isExpanded ? 'Hide New Todo Form' : 'Create New Todo'}
+        </span>
       </button>
-    </form>
+
+      {isExpanded && (
+        <form id="todo-form" onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <div className={styles.labelRow}>
+              <label htmlFor="todo-title" className={styles.label}>Task Title</label>
+              <span className={styles.requiredBadge}>Required</span>
+            </div>
+            <input
+              id="todo-title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="What needs to be done?"
+              maxLength={200}
+              disabled={isLoading}
+              className={styles.input}
+              autoFocus
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="todo-description" className={styles.label}>Description (optional)</label>
+            <textarea
+              id="todo-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add details about this task..."
+              maxLength={1000}
+              disabled={isLoading}
+              rows={3}
+              className={styles.textarea}
+            />
+          </div>
+
+          <div className={styles.gridRow}>
+            <div>
+              <label className={styles.label}>Priority</label>
+              <Select
+                value={priority}
+                onChange={(value) => setPriority(Number(value))}
+                disabled={isLoading}
+                options={getPriorityOptions()}
+              />
+            </div>
+
+            <div>
+              <label className={styles.label}>Due Date</label>
+              <DatePicker
+                value={dueDate}
+                onChange={setDueDate}
+                disabled={isLoading}
+                minDate={new Date()}
+              />
+            </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="todo-tags" className={styles.label}>Tags (comma-separated)</label>
+            <input
+              id="todo-tags"
+              type="text"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="work, personal, urgent"
+              disabled={isLoading}
+              className={styles.input}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading || !title.trim()}
+            className={styles.submitButton}
+          >
+            {isLoading ? 'Adding...' : 'Add Todo'}
+          </button>
+        </form>
+      )}
+    </div>
   );
 }
