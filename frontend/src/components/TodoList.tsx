@@ -4,8 +4,11 @@ import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
 import { EmptyState } from './EmptyState';
 import { Select } from './Select';
+import { ConfirmModal } from './ConfirmModal';
 import { useTodos, useToggleTodo, useDeleteTodo, useUpdateTodo } from '../hooks/useTodos';
+import { useToast } from '../hooks/useToast';
 import { getPriorityOptions } from '../utils/todoHelpers';
+import { sanitizeTodoInput } from '../utils/sanitize';
 import type { UpdateTodoRequest } from '../types/todo';
 import styles from './TodoList.module.css';
 
@@ -15,25 +18,77 @@ export function TodoList() {
   const [filterCompleted, setFilterCompleted] = useState<boolean | undefined>(undefined);
   const [filterPriority, setFilterPriority] = useState<number | undefined>(undefined);
   const [sortBy, setSortBy] = useState<SortOption>('createdAt');
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; todoId: number | null }>({
+    isOpen: false,
+    todoId: null,
+  });
 
   const { data: todos, isLoading, error, refetch } = useTodos(filterCompleted, filterPriority);
   const toggleMutation = useToggleTodo();
   const deleteMutation = useDeleteTodo();
   const updateMutation = useUpdateTodo();
+  const { addToast } = useToast();
 
   const handleToggle = useCallback((id: number) => {
-    toggleMutation.mutate(id);
-  }, [toggleMutation]);
+    toggleMutation.mutate(id, {
+      onSuccess: () => {
+        addToast('Todo status updated', 'success');
+      },
+      onError: (error) => {
+        addToast(
+          error instanceof Error ? error.message : 'Failed to update todo',
+          'error'
+        );
+      },
+    });
+  }, [toggleMutation, addToast]);
 
-  const handleDelete = useCallback((id: number) => {
-    if (window.confirm('Are you sure you want to delete this todo?')) {
-      deleteMutation.mutate(id);
-    }
-  }, [deleteMutation]);
+  const handleDeleteRequest = useCallback((id: number) => {
+    setDeleteConfirm({ isOpen: true, todoId: id });
+  }, []);
+
+  const handleDeleteConfirm = useCallback(() => {
+    if (deleteConfirm.todoId === null) return;
+
+    deleteMutation.mutate(deleteConfirm.todoId, {
+      onSuccess: () => {
+        addToast('Todo deleted successfully', 'success');
+      },
+      onError: (error) => {
+        addToast(
+          error instanceof Error ? error.message : 'Failed to delete todo',
+          'error'
+        );
+      },
+    });
+    setDeleteConfirm({ isOpen: false, todoId: null });
+  }, [deleteConfirm.todoId, deleteMutation, addToast]);
+
+  const handleDeleteCancel = useCallback(() => {
+    setDeleteConfirm({ isOpen: false, todoId: null });
+  }, []);
 
   const handleUpdate = useCallback((id: number, data: UpdateTodoRequest) => {
-    updateMutation.mutate({ id, data });
-  }, [updateMutation]);
+    const sanitized = sanitizeTodoInput({
+      title: data.title || '',
+      description: data.description,
+    });
+
+    updateMutation.mutate(
+      { id, data: { ...data, ...sanitized } },
+      {
+        onSuccess: () => {
+          addToast('Todo updated successfully', 'success');
+        },
+        onError: (error) => {
+          addToast(
+            error instanceof Error ? error.message : 'Failed to update todo',
+            'error'
+          );
+        },
+      }
+    );
+  }, [updateMutation, addToast]);
 
   const hasActiveFilters = filterCompleted !== undefined || filterPriority !== undefined;
 
@@ -89,6 +144,17 @@ export function TodoList() {
 
   return (
     <div>
+      <ConfirmModal
+        isOpen={deleteConfirm.isOpen}
+        title="Delete Todo"
+        message="Are you sure you want to delete this todo? This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        variant="danger"
+      />
+
       {/* Filters and Stats */}
       <div className={styles.statsCard}>
         <div className={styles.statsGrid}>
@@ -185,7 +251,7 @@ export function TodoList() {
               key={todo.id}
               todo={todo}
               onToggle={handleToggle}
-              onDelete={handleDelete}
+              onDelete={handleDeleteRequest}
               onUpdate={handleUpdate}
             />
           ))}
