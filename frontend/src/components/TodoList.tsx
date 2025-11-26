@@ -155,85 +155,87 @@ export function TodoList() {
         variant="danger"
       />
 
-      {/* Filters and Stats */}
-      <div className={styles.statsCard}>
-        <div className={styles.statsGrid}>
-          <div className={styles.statItem}>
-            <div className={`${styles.statNumber} ${styles.total}`}>
-              {stats.total}
+      {/* Filters and Stats - only show when there are todos */}
+      {stats.total > 0 && (
+        <div className={styles.statsCard}>
+          <div className={styles.statsGrid}>
+            <div className={styles.statItem}>
+              <div className={`${styles.statNumber} ${styles.total}`}>
+                {stats.total}
+              </div>
+              <div className={styles.statLabel}>Total</div>
             </div>
-            <div className={styles.statLabel}>Total</div>
-          </div>
-          <div className={styles.statItem}>
-            <div className={`${styles.statNumber} ${styles.pending}`}>
-              {stats.pending}
+            <div className={styles.statItem}>
+              <div className={`${styles.statNumber} ${styles.pending}`}>
+                {stats.pending}
+              </div>
+              <div className={styles.statLabel}>Pending</div>
             </div>
-            <div className={styles.statLabel}>Pending</div>
-          </div>
-          <div className={styles.statItem}>
-            <div className={`${styles.statNumber} ${styles.completed}`}>
-              {stats.completed}
+            <div className={styles.statItem}>
+              <div className={`${styles.statNumber} ${styles.completed}`}>
+                {stats.completed}
+              </div>
+              <div className={styles.statLabel}>Completed</div>
             </div>
-            <div className={styles.statLabel}>Completed</div>
           </div>
+
+          <div className={styles.filterSection}>
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Filter by Status</label>
+              <Select
+                value={filterCompleted === undefined ? 'all' : filterCompleted ? 'completed' : 'pending'}
+                onChange={(value) => {
+                  setFilterCompleted(value === 'all' ? undefined : value === 'completed');
+                }}
+                options={[
+                  { value: 'all', label: 'All Tasks' },
+                  { value: 'pending', label: 'Pending' },
+                  { value: 'completed', label: 'Completed' },
+                ]}
+              />
+            </div>
+
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Filter by Priority</label>
+              <Select
+                value={filterPriority ?? 'all'}
+                onChange={(value) => {
+                  setFilterPriority(value === 'all' ? undefined : Number(value));
+                }}
+                options={[
+                  { value: 'all', label: 'All Priorities' },
+                  ...getPriorityOptions(),
+                ]}
+              />
+            </div>
+
+            <div className={styles.filterGroup}>
+              <label className={styles.filterLabel}>Sort By</label>
+              <Select
+                value={sortBy}
+                onChange={(value) => setSortBy(value as SortOption)}
+                options={[
+                  { value: 'createdAt', label: 'Date Created (Newest)' },
+                  { value: 'priority', label: 'Priority (High to Low)' },
+                  { value: 'dueDate', label: 'Due Date (Earliest)' },
+                  { value: 'title', label: 'Title (A-Z)' },
+                ]}
+              />
+            </div>
+          </div>
+
+          {hasActiveFilters && (
+            <div className={styles.clearFiltersContainer}>
+              <button
+                onClick={handleClearFilters}
+                className={styles.clearFiltersButton}
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
         </div>
-
-        <div className={styles.filterSection}>
-          <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Filter by Status</label>
-            <Select
-              value={filterCompleted === undefined ? 'all' : filterCompleted ? 'completed' : 'pending'}
-              onChange={(value) => {
-                setFilterCompleted(value === 'all' ? undefined : value === 'completed');
-              }}
-              options={[
-                { value: 'all', label: 'All Tasks' },
-                { value: 'pending', label: 'Pending' },
-                { value: 'completed', label: 'Completed' },
-              ]}
-            />
-          </div>
-
-          <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Filter by Priority</label>
-            <Select
-              value={filterPriority ?? 'all'}
-              onChange={(value) => {
-                setFilterPriority(value === 'all' ? undefined : Number(value));
-              }}
-              options={[
-                { value: 'all', label: 'All Priorities' },
-                ...getPriorityOptions(),
-              ]}
-            />
-          </div>
-
-          <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Sort By</label>
-            <Select
-              value={sortBy}
-              onChange={(value) => setSortBy(value as SortOption)}
-              options={[
-                { value: 'createdAt', label: 'Date Created (Newest)' },
-                { value: 'priority', label: 'Priority (High to Low)' },
-                { value: 'dueDate', label: 'Due Date (Earliest)' },
-                { value: 'title', label: 'Title (A-Z)' },
-              ]}
-            />
-          </div>
-        </div>
-
-        {hasActiveFilters && (
-          <div className={styles.clearFiltersContainer}>
-            <button
-              onClick={handleClearFilters}
-              className={styles.clearFiltersButton}
-            >
-              Clear Filters
-            </button>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Todo List */}
       {!sortedTodos || sortedTodos.length === 0 ? (

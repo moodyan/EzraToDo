@@ -9,7 +9,6 @@ interface EmptyStateProps {
 export function EmptyState({ message, actionLabel, onAction }: EmptyStateProps) {
   return (
     <div className={styles.emptyState}>
-      <div className={styles.icon}>📝</div>
       <p className={styles.message}>{message}</p>
       {actionLabel && onAction && (
         <button onClick={onAction} className={styles.actionButton}>
