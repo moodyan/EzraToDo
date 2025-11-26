@@ -8,10 +8,11 @@ import styles from './TodoForm.module.css';
 interface TodoFormProps {
   onSubmit: (data: CreateTodoRequest) => void;
   isLoading?: boolean;
+  defaultExpanded?: boolean;
 }
 
-export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+export function TodoForm({ onSubmit, isLoading, defaultExpanded = false }: TodoFormProps) {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState(1);

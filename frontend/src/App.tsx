@@ -4,7 +4,7 @@ import { TodoList } from './components/TodoList';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastContainer } from './components/Toast';
 import { ToastProvider, useToast } from './hooks/useToast';
-import { useCreateTodo } from './hooks/useTodos';
+import { useCreateTodo, useTodos } from './hooks/useTodos';
 import { sanitizeTodoInput } from './utils/sanitize';
 import type { CreateTodoRequest } from './types/todo';
 import styles from './App.module.css';
@@ -19,6 +19,7 @@ const queryClient = new QueryClient({
 });
 
 function TodoApp() {
+  const { data: todos } = useTodos();
   const createMutation = useCreateTodo();
   const { toasts, addToast, removeToast } = useToast();
 
@@ -58,7 +59,11 @@ function TodoApp() {
           </p>
         </header>
 
-        <TodoForm onSubmit={handleCreateTodo} isLoading={createMutation.isPending} />
+        <TodoForm
+          onSubmit={handleCreateTodo}
+          isLoading={createMutation.isPending}
+          defaultExpanded={todos?.length === 0}
+        />
         <TodoList />
       </div>
     </div>
