@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
 namespace TodoApi.Data;
@@ -45,10 +46,38 @@ public class TodoDbContext : DbContext
             entity.Property(e => e.Tags)
                 .HasMaxLength(500);
 
+            // Configure DateOnly conversion for SQLite compatibility
+            // Handles both new DateOnly format and legacy DateTime strings
+            entity.Property(e => e.DueDate)
+                .HasConversion(
+                    v => v.HasValue ? v.Value.ToString("yyyy-MM-dd") : null,
+                    v => v != null ? ParseDateOnly(v) : null
+                );
+
             // Create index for common queries
             entity.HasIndex(e => e.IsCompleted);
             entity.HasIndex(e => e.CreatedAt);
             entity.HasIndex(e => e.Priority);
         });
+    }
+
+    /// <summary>
+    /// Parses a date string to DateOnly, handling both DateOnly and DateTime formats
+    /// </summary>
+    private static DateOnly ParseDateOnly(string value)
+    {
+        // Try DateOnly format first (yyyy-MM-dd)
+        if (DateOnly.TryParse(value, out var dateOnly))
+        {
+            return dateOnly;
+        }
+
+        // Fall back to DateTime format for legacy data (yyyy-MM-dd HH:mm:ss)
+        if (DateTime.TryParse(value, out var dateTime))
+        {
+            return DateOnly.FromDateTime(dateTime);
+        }
+
+        throw new FormatException($"Unable to parse '{value}' as a date");
     }
 }
