@@ -155,8 +155,8 @@ export function TodoList() {
         variant="danger"
       />
 
-      {/* Filters and Stats - only show when there are todos */}
-      {stats.total > 0 && (
+      {/* Filters and Stats - show when there are todos or filters are active */}
+      {(stats.total > 0 || hasActiveFilters) && (
         <div className={styles.statsCard}>
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
