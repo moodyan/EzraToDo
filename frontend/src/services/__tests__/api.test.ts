@@ -240,4 +240,73 @@ describe('todoApi - Negative Scenarios', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('Timezone Offset', () => {
+    it('should include timezoneOffset when creating a todo', async () => {
+      // Arrange
+      const mockTodo = {
+        id: 1,
+        title: 'Test',
+        priority: 1,
+        isCompleted: false,
+        createdAt: '2024-01-01T00:00:00Z',
+        priorityLabel: 'Medium',
+        tags: [],
+      };
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 201,
+        json: async () => mockTodo,
+      });
+
+      const request: CreateTodoRequest = {
+        title: 'Test',
+        priority: 1,
+      };
+
+      // Act
+      await todoApi.create(request);
+
+      // Assert
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: expect.stringContaining('timezoneOffset'),
+        })
+      );
+    });
+
+    it('should include timezoneOffset when updating a todo', async () => {
+      // Arrange
+      const mockTodo = {
+        id: 1,
+        title: 'Updated',
+        priority: 1,
+        isCompleted: false,
+        createdAt: '2024-01-01T00:00:00Z',
+        priorityLabel: 'Medium',
+        tags: [],
+      };
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => mockTodo,
+      });
+
+      const request: UpdateTodoRequest = {
+        title: 'Updated',
+      };
+
+      // Act
+      await todoApi.update(1, request);
+
+      // Assert
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: expect.stringContaining('timezoneOffset'),
+        })
+      );
+    });
+  });
 });
