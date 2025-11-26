@@ -113,14 +113,14 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
 
           <div className={styles.metadata}>
             <span
-              className={styles.priorityBadge}
-              style={{ backgroundColor: priorityColors[todo.priority] }}
+              className={styles.priorityText}
+              style={{ color: priorityColors[todo.priority] }}
             >
               {todo.priorityLabel}
             </span>
 
             {todo.dueDate && (
-              <span>📅 Due: {formatDate(todo.dueDate)}</span>
+              <span className={styles.dueDate}>{formatDate(todo.dueDate)}</span>
             )}
 
             {todo.tags.length > 0 && (
