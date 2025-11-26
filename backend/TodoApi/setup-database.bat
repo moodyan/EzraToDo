@@ -5,20 +5,12 @@ echo.
 echo Setting up Todo API Database...
 echo.
 
-REM Update EF Core tools to version 8.0.0
-echo Updating Entity Framework Core tools to version 8.0.0...
-dotnet tool update --global dotnet-ef --version 8.0.0
+REM Restore dependencies
+echo Restoring dependencies...
+dotnet restore
 
 echo.
-echo EF Core tools updated!
-echo.
-
-REM Create initial migration
-echo Creating initial database migration...
-dotnet ef migrations add InitialCreate
-
-echo.
-echo Migration created!
+echo Dependencies restored!
 echo.
 
 REM Apply migration to database
