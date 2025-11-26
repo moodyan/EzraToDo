@@ -55,9 +55,9 @@ frontend/src/
 ## Getting Started
 
 ### Prerequisites
-- .NET 8.0 SDK or later
-- Node.js 18+ and npm
-- Git
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
+- [Node.js 18+](https://nodejs.org/) and npm
+- [Git](https://git-scm.com/downloads)
 
 ### Backend Setup
 
@@ -90,9 +90,8 @@ cd backend/TodoApi
 dotnet restore
 ```
 
-3. Create and apply database migrations:
+3. Apply database migrations:
 ```bash
-dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 

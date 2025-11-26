@@ -171,6 +171,10 @@
   margin-bottom: 0.5rem;
 }
 
+.labelRow .label {
+  margin-bottom: 0;
+}
+
 .label {
   display: block;
   margin-bottom: 0.625rem;

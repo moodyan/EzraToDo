@@ -45,7 +45,10 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
     return (
       <div className={styles.todoCard}>
         <div className={styles.editGroup}>
-          <label className={styles.editLabel}>Title</label>
+          <div className={styles.editLabelRow}>
+            <label className={styles.editLabel}>Title</label>
+            <span className={styles.requiredBadge}>Required</span>
+          </div>
           <input
             type="text"
             value={editTitle}
@@ -82,7 +85,11 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
           </div>
         </div>
         <div className={styles.editActions}>
-          <button onClick={handleSave} className={`${styles.button} ${styles.saveButton}`}>
+          <button
+            onClick={handleSave}
+            disabled={!editTitle.trim()}
+            className={`${styles.button} ${styles.saveButton}`}
+          >
             Save
           </button>
           <button onClick={handleCancel} className={`${styles.button} ${styles.cancelButton}`}>
