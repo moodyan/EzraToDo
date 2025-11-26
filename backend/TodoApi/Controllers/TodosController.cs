@@ -53,16 +53,6 @@ public class TodosController : ControllerBase
         _logger.LogInformation("Getting todo with ID: {Id}", id);
 
         var todo = await _todoService.GetByIdAsync(id);
-        if (todo == null)
-        {
-            return NotFound(new ErrorResponse
-            {
-                Message = $"Todo with ID {id} not found",
-                StatusCode = StatusCodes.Status404NotFound,
-                TraceId = HttpContext.TraceIdentifier
-            });
-        }
-
         return Ok(todo);
     }
 
@@ -76,7 +66,6 @@ public class TodosController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TodoResponse>> Create([FromBody] CreateTodoRequest request)
     {
-        // Model validation is handled by FluentValidation
         _logger.LogInformation("Creating new todo with title: {Title}", request.Title);
 
         var todo = await _todoService.CreateAsync(request);
@@ -98,16 +87,6 @@ public class TodosController : ControllerBase
         _logger.LogInformation("Updating todo with ID: {Id}", id);
 
         var todo = await _todoService.UpdateAsync(id, request);
-        if (todo == null)
-        {
-            return NotFound(new ErrorResponse
-            {
-                Message = $"Todo with ID {id} not found",
-                StatusCode = StatusCodes.Status404NotFound,
-                TraceId = HttpContext.TraceIdentifier
-            });
-        }
-
         return Ok(todo);
     }
 
@@ -123,17 +102,7 @@ public class TodosController : ControllerBase
     {
         _logger.LogInformation("Deleting todo with ID: {Id}", id);
 
-        var deleted = await _todoService.DeleteAsync(id);
-        if (!deleted)
-        {
-            return NotFound(new ErrorResponse
-            {
-                Message = $"Todo with ID {id} not found",
-                StatusCode = StatusCodes.Status404NotFound,
-                TraceId = HttpContext.TraceIdentifier
-            });
-        }
-
+        await _todoService.DeleteAsync(id);
         return NoContent();
     }
 
@@ -150,16 +119,6 @@ public class TodosController : ControllerBase
         _logger.LogInformation("Toggling completion status for todo with ID: {Id}", id);
 
         var todo = await _todoService.ToggleCompleteAsync(id);
-        if (todo == null)
-        {
-            return NotFound(new ErrorResponse
-            {
-                Message = $"Todo with ID {id} not found",
-                StatusCode = StatusCodes.Status404NotFound,
-                TraceId = HttpContext.TraceIdentifier
-            });
-        }
-
         return Ok(todo);
     }
 }

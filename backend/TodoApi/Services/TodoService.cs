@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
 using TodoApi.DTOs;
+using TodoApi.Exceptions;
 using TodoApi.Models;
 
 namespace TodoApi.Services;
@@ -43,10 +44,14 @@ public class TodoService : ITodoService
         return items.Select(MapToResponse);
     }
 
-    public async Task<TodoResponse?> GetByIdAsync(int id)
+    public async Task<TodoResponse> GetByIdAsync(int id)
     {
         var item = await _context.TodoItems.FindAsync(id);
-        return item == null ? null : MapToResponse(item);
+        if (item == null)
+        {
+            throw new NotFoundException("Todo", id);
+        }
+        return MapToResponse(item);
     }
 
     public async Task<TodoResponse> CreateAsync(CreateTodoRequest request)
@@ -70,12 +75,12 @@ public class TodoService : ITodoService
         return MapToResponse(item);
     }
 
-    public async Task<TodoResponse?> UpdateAsync(int id, UpdateTodoRequest request)
+    public async Task<TodoResponse> UpdateAsync(int id, UpdateTodoRequest request)
     {
         var item = await _context.TodoItems.FindAsync(id);
         if (item == null)
         {
-            return null;
+            throw new NotFoundException("Todo", id);
         }
 
         // Update only provided fields
@@ -115,26 +120,24 @@ public class TodoService : ITodoService
         return MapToResponse(item);
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task DeleteAsync(int id)
     {
         var item = await _context.TodoItems.FindAsync(id);
         if (item == null)
         {
-            return false;
+            throw new NotFoundException("Todo", id);
         }
 
         _context.TodoItems.Remove(item);
         await _context.SaveChangesAsync();
-
-        return true;
     }
 
-    public async Task<TodoResponse?> ToggleCompleteAsync(int id)
+    public async Task<TodoResponse> ToggleCompleteAsync(int id)
     {
         var item = await _context.TodoItems.FindAsync(id);
         if (item == null)
         {
-            return null;
+            throw new NotFoundException("Todo", id);
         }
 
         item.IsCompleted = !item.IsCompleted;
