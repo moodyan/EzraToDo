@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using TodoApi.DTOs;
+using TodoApi.Exceptions;
 
 namespace TodoApi.Middleware;
 
@@ -37,6 +38,7 @@ public class GlobalExceptionHandlerMiddleware
     {
         var statusCode = exception switch
         {
+            NotFoundException => (int)HttpStatusCode.NotFound,
             ArgumentException => (int)HttpStatusCode.BadRequest,
             KeyNotFoundException => (int)HttpStatusCode.NotFound,
             UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
@@ -50,11 +52,13 @@ public class GlobalExceptionHandlerMiddleware
             TraceId = context.TraceIdentifier
         };
 
-        // Don't expose internal error details in production
+        // Only expose error details for expected exceptions, not internal errors
         if (statusCode == (int)HttpStatusCode.InternalServerError)
         {
             errorResponse.Message = "An internal server error occurred. Please try again later.";
         }
+        // For known exceptions (NotFound, BadRequest), use the exception message
+        // which is safe to expose to clients
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = statusCode;
