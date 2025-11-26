@@ -101,9 +101,17 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
         />
 
         <div className={styles.contentBody}>
-          <h3 className={`${styles.title} ${todo.isCompleted ? styles.completed : ''}`}>
-            {todo.title}
-          </h3>
+          <div className={styles.titleRow}>
+            <h3 className={`${styles.title} ${todo.isCompleted ? styles.completed : ''}`}>
+              {todo.title}
+            </h3>
+            <span
+              className={styles.priorityBadge}
+              style={{ backgroundColor: priorityColors[todo.priority] }}
+            >
+              {todo.priorityLabel}
+            </span>
+          </div>
 
           {todo.description && (
             <p className={styles.description}>
@@ -112,15 +120,8 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
           )}
 
           <div className={styles.metadata}>
-            <span
-              className={styles.priorityText}
-              style={{ color: priorityColors[todo.priority] }}
-            >
-              {todo.priorityLabel}
-            </span>
-
             {todo.dueDate && (
-              <span className={styles.dueDate}>{formatDate(todo.dueDate)}</span>
+              <span className={styles.dueDate}>Due: {formatDate(todo.dueDate)}</span>
             )}
 
             {todo.tags.length > 0 && (
