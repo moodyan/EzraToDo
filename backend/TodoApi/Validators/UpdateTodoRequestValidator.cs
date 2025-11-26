@@ -23,8 +23,9 @@ public class UpdateTodoRequestValidator : AbstractValidator<UpdateTodoRequest>
             .InclusiveBetween(0, 3).WithMessage("Priority must be between 0 (Low) and 3 (Urgent)")
             .When(x => x.Priority.HasValue);
 
+        // Allow dates from yesterday to account for timezone differences
         RuleFor(x => x.DueDate)
-            .GreaterThanOrEqualTo(DateTime.UtcNow.Date)
+            .GreaterThanOrEqualTo(DateTime.UtcNow.Date.AddDays(-1))
             .WithMessage("Due date cannot be in the past")
             .When(x => x.DueDate.HasValue);
     }

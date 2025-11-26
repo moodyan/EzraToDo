@@ -1,4 +1,4 @@
-import type { TodoItem, CreateTodoRequest, UpdateTodoRequest, ErrorResponse } from '../types/todo';
+import type { TodoItem, CreateTodoRequest, UpdateTodoRequest } from '../types/todo';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -16,14 +16,18 @@ class ApiError extends Error {
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    const errorData: ErrorResponse = await response.json().catch(() => ({
+    const errorData = await response.json().catch(() => ({
       message: 'An unexpected error occurred',
       statusCode: response.status,
     }));
 
+    // Handle both our custom error format and ASP.NET validation error format
+    const message = errorData.message || errorData.title || 'An unexpected error occurred';
+    const statusCode = errorData.statusCode || errorData.status || response.status;
+
     throw new ApiError(
-      errorData.statusCode,
-      errorData.message,
+      statusCode,
+      message,
       errorData.errors,
       errorData.traceId
     );
