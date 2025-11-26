@@ -22,5 +22,10 @@ public class UpdateTodoRequestValidator : AbstractValidator<UpdateTodoRequest>
         RuleFor(x => x.Priority)
             .InclusiveBetween(0, 3).WithMessage("Priority must be between 0 (Low) and 3 (Urgent)")
             .When(x => x.Priority.HasValue);
+
+        RuleFor(x => x.DueDate)
+            .GreaterThanOrEqualTo(DateTime.UtcNow.Date)
+            .WithMessage("Due date cannot be in the past")
+            .When(x => x.DueDate.HasValue);
     }
 }
