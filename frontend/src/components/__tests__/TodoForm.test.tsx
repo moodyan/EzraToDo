@@ -208,7 +208,7 @@ describe('TodoForm - Negative Scenarios', () => {
     const descriptionInput = screen.getByPlaceholderText(
       'Description (optional)'
     ) as HTMLTextAreaElement;
-    const prioritySelect = screen.getByLabelText('Priority') as HTMLSelectElement;
+    const prioritySelect = screen.getByRole('combobox') as HTMLSelectElement;
 
     expect(titleInput.disabled).toBe(true);
     expect(descriptionInput.disabled).toBe(true);
