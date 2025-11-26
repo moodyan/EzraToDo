@@ -58,19 +58,29 @@ export const todoApi = {
   },
 
   async create(data: CreateTodoRequest): Promise<TodoItem> {
+    // Include timezone offset for server-side date validation
+    const payload = {
+      ...data,
+      timezoneOffset: new Date().getTimezoneOffset(),
+    };
     const response = await fetch(`${API_BASE_URL}/todos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
     return handleResponse<TodoItem>(response);
   },
 
   async update(id: number, data: UpdateTodoRequest): Promise<TodoItem> {
+    // Include timezone offset for server-side date validation
+    const payload = {
+      ...data,
+      timezoneOffset: new Date().getTimezoneOffset(),
+    };
     const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
     return handleResponse<TodoItem>(response);
   },

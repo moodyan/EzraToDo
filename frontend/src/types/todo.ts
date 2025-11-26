@@ -15,6 +15,7 @@ export interface CreateTodoRequest {
   title: string;
   description?: string;
   dueDate?: string;
+  timezoneOffset?: number;
   priority: number;
   tags?: string[];
 }
@@ -24,6 +25,7 @@ export interface UpdateTodoRequest {
   description?: string;
   isCompleted?: boolean;
   dueDate?: string;
+  timezoneOffset?: number;
   priority?: number;
   tags?: string[];
 }

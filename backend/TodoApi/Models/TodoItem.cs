@@ -17,7 +17,7 @@ public class TodoItem
 
     public DateTime? CompletedAt { get; set; }
 
-    public DateTime? DueDate { get; set; }
+    public DateOnly? DueDate { get; set; }
 
     public TodoPriority Priority { get; set; } = TodoPriority.Medium;
 

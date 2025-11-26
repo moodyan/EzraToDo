@@ -111,11 +111,12 @@ public class ValidationTests
     {
         // Arrange
         var validator = new CreateTodoRequestValidator();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var request = new CreateTodoRequest
         {
             Title = "Valid Title",
             Priority = 1,
-            DueDate = DateTime.UtcNow.AddDays(-3) // 3 days ago (beyond timezone tolerance)
+            DueDate = today.AddDays(-1) // Yesterday
         };
 
         // Act
@@ -127,15 +128,16 @@ public class ValidationTests
     }
 
     [Fact]
-    public void CreateTodoRequest_ShouldNotHaveError_WhenDueDateIsYesterday()
+    public void CreateTodoRequest_ShouldNotHaveError_WhenDueDateIsToday()
     {
-        // Arrange - Yesterday is allowed due to timezone tolerance
+        // Arrange
         var validator = new CreateTodoRequestValidator();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var request = new CreateTodoRequest
         {
             Title = "Valid Title",
             Priority = 1,
-            DueDate = DateTime.UtcNow.AddDays(-1) // Yesterday (within timezone tolerance)
+            DueDate = today
         };
 
         // Act
@@ -146,15 +148,16 @@ public class ValidationTests
     }
 
     [Fact]
-    public void CreateTodoRequest_ShouldNotHaveError_WhenDueDateIsToday()
+    public void CreateTodoRequest_ShouldNotHaveError_WhenDueDateIsInFuture()
     {
         // Arrange
         var validator = new CreateTodoRequestValidator();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var request = new CreateTodoRequest
         {
             Title = "Valid Title",
             Priority = 1,
-            DueDate = DateTime.UtcNow.Date // Today at midnight
+            DueDate = today.AddDays(7)
         };
 
         // Act
@@ -169,12 +172,13 @@ public class ValidationTests
     {
         // Arrange
         var validator = new CreateTodoRequestValidator();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var request = new CreateTodoRequest
         {
             Title = "Valid Title",
             Description = "Valid Description",
             Priority = 2,
-            DueDate = DateTime.UtcNow.AddDays(7),
+            DueDate = today.AddDays(7),
             Tags = new List<string> { "tag1", "tag2" }
         };
 
@@ -293,5 +297,49 @@ public class ValidationTests
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public void CreateTodoRequest_ShouldAcceptTodayWithTimezoneOffset()
+    {
+        // Arrange - Simulate a client in UTC-8 (480 minutes ahead)
+        // When it's Jan 16 00:30 UTC, it's still Jan 15 16:30 in UTC-8
+        var validator = new CreateTodoRequestValidator();
+        var clientToday = DateOnly.FromDateTime(DateTime.UtcNow);
+        var request = new CreateTodoRequest
+        {
+            Title = "Valid Title",
+            Priority = 1,
+            DueDate = clientToday,
+            TimezoneOffset = 0 // UTC client
+        };
+
+        // Act
+        var result = validator.TestValidate(request);
+
+        // Assert
+        result.ShouldNotHaveValidationErrorFor(x => x.DueDate);
+    }
+
+    [Fact]
+    public void CreateTodoRequest_ShouldRejectPastDateWithTimezoneOffset()
+    {
+        // Arrange
+        var validator = new CreateTodoRequestValidator();
+        var clientToday = DateOnly.FromDateTime(DateTime.UtcNow);
+        var request = new CreateTodoRequest
+        {
+            Title = "Valid Title",
+            Priority = 1,
+            DueDate = clientToday.AddDays(-1), // Yesterday
+            TimezoneOffset = 0 // UTC client
+        };
+
+        // Act
+        var result = validator.TestValidate(request);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.DueDate)
+            .WithErrorMessage("Due date cannot be in the past");
     }
 }

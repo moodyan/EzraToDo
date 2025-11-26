@@ -23,10 +23,24 @@ public class UpdateTodoRequestValidator : AbstractValidator<UpdateTodoRequest>
             .InclusiveBetween(0, 3).WithMessage("Priority must be between 0 (Low) and 3 (Urgent)")
             .When(x => x.Priority.HasValue);
 
-        // Allow dates from yesterday to account for timezone differences
         RuleFor(x => x.DueDate)
-            .GreaterThanOrEqualTo(DateTime.UtcNow.Date.AddDays(-1))
+            .Must((request, dueDate) => dueDate >= GetClientToday(request.TimezoneOffset))
             .WithMessage("Due date cannot be in the past")
             .When(x => x.DueDate.HasValue);
+    }
+
+    /// <summary>
+    /// Gets "today" in the client's timezone, or UTC if no offset provided
+    /// </summary>
+    private static DateOnly GetClientToday(int? timezoneOffset)
+    {
+        if (timezoneOffset.HasValue)
+        {
+            // TimezoneOffset is in minutes (e.g., -480 for UTC-8)
+            // JavaScript's getTimezoneOffset() returns positive for west of UTC
+            var clientTime = DateTime.UtcNow.AddMinutes(-timezoneOffset.Value);
+            return DateOnly.FromDateTime(clientTime);
+        }
+        return DateOnly.FromDateTime(DateTime.UtcNow);
     }
 }

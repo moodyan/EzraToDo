@@ -26,7 +26,7 @@ public class TodoService : ITodoService
             .WhereIf(filter?.Priority.HasValue == true, t => (int)t.Priority == filter!.Priority!.Value)
             .OrderBy(t => t.IsCompleted)
             .ThenByDescending(t => t.Priority)
-            .ThenBy(t => t.DueDate ?? DateTime.MaxValue)
+            .ThenBy(t => t.DueDate ?? DateOnly.MaxValue)
             .ThenByDescending(t => t.CreatedAt)
             .ToListAsync();
 
