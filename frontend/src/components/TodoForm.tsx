@@ -91,7 +91,7 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
           </div>
 
           <div className={styles.gridRow}>
-            <div>
+            <div className={styles.gridCell}>
               <label className={styles.label}>Priority</label>
               <Select
                 value={priority}
@@ -101,7 +101,7 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
               />
             </div>
 
-            <div>
+            <div className={styles.gridCell}>
               <label className={styles.label}>Due Date</label>
               <DatePicker
                 value={dueDate}

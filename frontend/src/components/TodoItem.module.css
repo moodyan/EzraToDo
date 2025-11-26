@@ -170,6 +170,11 @@
   box-shadow: 0 4px 12px rgba(192, 57, 43, 0.5);
 }
 
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 207, 51, 0.5);
+}
+
 .button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
