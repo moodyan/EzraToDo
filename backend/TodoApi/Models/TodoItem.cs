@@ -23,11 +23,3 @@ public class TodoItem
 
     public string? Tags { get; set; } // Stored as comma-separated values
 }
-
-public enum TodoPriority
-{
-    Low = 0,
-    Medium = 1,
-    High = 2,
-    Urgent = 3
-}
