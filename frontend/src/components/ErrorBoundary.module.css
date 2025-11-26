@@ -59,3 +59,8 @@
 .retryButton:hover {
   background-color: #f0c030;
 }
+
+.retryButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 207, 51, 0.5);
+}

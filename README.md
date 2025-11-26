@@ -359,21 +359,6 @@ POST /api/todos
 20. E2E Tests: Playwright or Cypress tests
 21. Load Testing: Performance under load
 
-## Code Quality
-
-- No EF entities exposed in API responses
-- Thin controllers with business logic in services
-- Input validation on all endpoints
-- Consistent error response format
-- React Query for optimal data management
-- Modular, reusable components
-- Proper TypeScript types throughout
-- Clear naming conventions
-
 ## License
 
 MIT License - See LICENSE file for details.
-
----
-
-**Note**: This application is designed for demonstration purposes and showcases production-ready patterns and practices. For a full production deployment, consider implementing the improvements listed in the "Future Improvements" section.

@@ -81,10 +81,10 @@
 }
 
 .description {
-  margin: 0 0 0.5rem 0;
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  margin: 0 0 0.75rem 0;
+  color: #4a5568;
+  font-size: 0.95rem;
+  line-height: 1.6;
   word-break: break-word;
 }
 
@@ -93,13 +93,14 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
-  font-size: 0.85rem;
-  color: #666;
+  font-size: 0.8rem;
+  color: #888;
   margin-bottom: 0.25rem;
 }
 
 .dueDate {
-  color: #666;
+  color: #888;
+  font-weight: 500;
 }
 
 .tags {
@@ -167,6 +168,11 @@
 .deleteButton:hover {
   background: #c0392b;
   box-shadow: 0 4px 12px rgba(192, 57, 43, 0.5);
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 207, 51, 0.5);
 }
 
 .button:active:not(:disabled) {

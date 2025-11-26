@@ -57,6 +57,11 @@
   opacity: 1;
 }
 
+.dismissButton:focus {
+  outline: none;
+  opacity: 1;
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;

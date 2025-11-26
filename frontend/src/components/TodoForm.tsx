@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { Select } from './Select';
 import { DatePicker } from './DatePicker';
 import { getPriorityOptions } from '../utils/todoHelpers';
@@ -8,10 +8,18 @@ import styles from './TodoForm.module.css';
 interface TodoFormProps {
   onSubmit: (data: CreateTodoRequest) => void;
   isLoading?: boolean;
+  defaultExpanded?: boolean;
 }
 
-export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+export function TodoForm({ onSubmit, isLoading, defaultExpanded = false }: TodoFormProps) {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+
+  // Expand when defaultExpanded becomes true (e.g., after todos load and list is empty)
+  useEffect(() => {
+    if (defaultExpanded) {
+      setIsExpanded(true);
+    }
+  }, [defaultExpanded]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState(1);
@@ -91,7 +99,7 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
           </div>
 
           <div className={styles.gridRow}>
-            <div>
+            <div className={styles.gridCell}>
               <label className={styles.label}>Priority</label>
               <Select
                 value={priority}
@@ -101,7 +109,7 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
               />
             </div>
 
-            <div>
+            <div className={styles.gridCell}>
               <label className={styles.label}>Due Date</label>
               <DatePicker
                 value={dueDate}
