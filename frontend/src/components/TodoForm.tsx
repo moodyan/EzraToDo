@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { Select } from './Select';
 import { DatePicker } from './DatePicker';
 import { getPriorityOptions } from '../utils/todoHelpers';
@@ -13,6 +13,13 @@ interface TodoFormProps {
 
 export function TodoForm({ onSubmit, isLoading, defaultExpanded = false }: TodoFormProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+
+  // Expand when defaultExpanded becomes true (e.g., after todos load and list is empty)
+  useEffect(() => {
+    if (defaultExpanded) {
+      setIsExpanded(true);
+    }
+  }, [defaultExpanded]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState(1);
