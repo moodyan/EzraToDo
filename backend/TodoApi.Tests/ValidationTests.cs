@@ -115,7 +115,7 @@ public class ValidationTests
         {
             Title = "Valid Title",
             Priority = 1,
-            DueDate = DateTime.UtcNow.AddDays(-1) // Yesterday
+            DueDate = DateTime.UtcNow.AddDays(-3) // 3 days ago (beyond timezone tolerance)
         };
 
         // Act
@@ -124,6 +124,25 @@ public class ValidationTests
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.DueDate)
             .WithErrorMessage("Due date cannot be in the past");
+    }
+
+    [Fact]
+    public void CreateTodoRequest_ShouldNotHaveError_WhenDueDateIsYesterday()
+    {
+        // Arrange - Yesterday is allowed due to timezone tolerance
+        var validator = new CreateTodoRequestValidator();
+        var request = new CreateTodoRequest
+        {
+            Title = "Valid Title",
+            Priority = 1,
+            DueDate = DateTime.UtcNow.AddDays(-1) // Yesterday (within timezone tolerance)
+        };
+
+        // Act
+        var result = validator.TestValidate(request);
+
+        // Assert
+        result.ShouldNotHaveValidationErrorFor(x => x.DueDate);
     }
 
     [Fact]
