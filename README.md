@@ -85,23 +85,18 @@ dotnet run
 cd backend/TodoApi
 ```
 
-2. Update EF Core tools (if needed):
-```bash
-dotnet tool update --global dotnet-ef --version 8.0.0
-```
-
-3. Restore dependencies:
+2. Restore dependencies:
 ```bash
 dotnet restore
 ```
 
-4. Create and apply database migrations:
+3. Create and apply database migrations:
 ```bash
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 
-5. Run the API:
+4. Run the API:
 ```bash
 dotnet run
 ```
@@ -109,8 +104,6 @@ dotnet run
 The API will be available at `http://localhost:5000`
 - Swagger UI: `http://localhost:5000` (root path)
 - API Endpoints: `http://localhost:5000/api/todos`
-
-**Note:** If you get EF tools version warnings, make sure you've updated to version 8.0.0 using the command in step 2.
 
 ### Frontend Setup
 
