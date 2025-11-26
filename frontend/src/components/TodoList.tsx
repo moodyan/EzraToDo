@@ -31,6 +31,13 @@ export function TodoList() {
     updateMutation.mutate({ id, data });
   };
 
+  const hasActiveFilters = filterCompleted !== undefined || filterPriority !== undefined;
+
+  const handleClearFilters = () => {
+    setFilterCompleted(undefined);
+    setFilterPriority(undefined);
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -109,6 +116,17 @@ export function TodoList() {
             </select>
           </div>
         </div>
+
+        {hasActiveFilters && (
+          <div className={styles.clearFiltersContainer}>
+            <button
+              onClick={handleClearFilters}
+              className={styles.clearFiltersButton}
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Todo List */}
