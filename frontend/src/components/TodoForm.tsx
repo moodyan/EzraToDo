@@ -57,12 +57,15 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
       {isExpanded && (
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
+            <div className={styles.labelRow}>
+              <label className={styles.label}>Task Title</label>
+              <span className={styles.requiredBadge}>Required</span>
+            </div>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="What needs to be done?"
-              required
               maxLength={200}
               disabled={isLoading}
               className={styles.input}
