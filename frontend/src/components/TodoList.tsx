@@ -42,20 +42,8 @@ export function TodoList() {
     setFilterPriority(undefined);
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return (
-      <ErrorMessage
-        message={error instanceof Error ? error.message : 'Failed to load todos'}
-        onRetry={() => refetch()}
-      />
-    );
-  }
-
   // Sort todos based on selected option (memoized for performance)
+  // NOTE: All hooks must be called before any early returns
   const sortedTodos = useMemo(() => {
     if (!todos) return [];
 
@@ -85,6 +73,19 @@ export function TodoList() {
     completed: todos?.filter(t => t.isCompleted).length || 0,
     pending: todos?.filter(t => !t.isCompleted).length || 0,
   };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage
+        message={error instanceof Error ? error.message : 'Failed to load todos'}
+        onRetry={() => refetch()}
+      />
+    );
+  }
 
   return (
     <div>
