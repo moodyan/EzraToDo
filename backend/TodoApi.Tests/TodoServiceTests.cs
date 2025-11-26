@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
 using TodoApi.DTOs;
 using TodoApi.Services;
+using Xunit;
 
 namespace TodoApi.Tests;
 
