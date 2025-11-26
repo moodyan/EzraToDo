@@ -2,6 +2,15 @@
   width: 100%;
 }
 
+/* Ensure react-datepicker internal wrapper takes full width */
+.datePickerWrapper :global(.react-datepicker-wrapper) {
+  width: 100%;
+}
+
+.datePickerWrapper :global(.react-datepicker__input-container) {
+  width: 100%;
+}
+
 .dateInput {
   width: 100%;
   padding: 0.875rem 1rem;
