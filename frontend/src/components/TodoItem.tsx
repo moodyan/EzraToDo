@@ -44,20 +44,26 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
   if (isEditing) {
     return (
       <div className={styles.todoCard}>
-        <input
-          type="text"
-          value={editTitle}
-          onChange={(e) => setEditTitle(e.target.value)}
-          className={styles.editInput}
-        />
-        <textarea
-          value={editDescription}
-          onChange={(e) => setEditDescription(e.target.value)}
-          rows={3}
-          className={styles.editTextarea}
-        />
+        <div className={styles.editGroup}>
+          <label className={styles.editLabel}>Title</label>
+          <input
+            type="text"
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            className={styles.editInput}
+          />
+        </div>
+        <div className={styles.editGroup}>
+          <label className={styles.editLabel}>Description</label>
+          <textarea
+            value={editDescription}
+            onChange={(e) => setEditDescription(e.target.value)}
+            rows={3}
+            className={styles.editTextarea}
+          />
+        </div>
         <div className={styles.editGridRow}>
-          <div>
+          <div className={styles.editGroup}>
             <label className={styles.editLabel}>Priority</label>
             <Select
               value={editPriority}
@@ -66,7 +72,7 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
               className={styles.editSelect}
             />
           </div>
-          <div>
+          <div className={styles.editGroup}>
             <label className={styles.editLabel}>Due Date</label>
             <DatePicker
               value={editDueDate}
