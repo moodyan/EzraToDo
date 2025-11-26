@@ -208,6 +208,17 @@
   gap: 1rem;
 }
 
+.editLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.editLabelRow .editLabel {
+  margin-bottom: 0;
+}
+
 .editLabel {
   display: block;
   margin-bottom: 0.625rem;
@@ -215,6 +226,18 @@
   font-weight: 600;
   color: #3d4852;
   letter-spacing: 0.2px;
+}
+
+.requiredBadge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #252218;
+  background-color: #ffcf33;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .editGroup {

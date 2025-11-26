@@ -45,7 +45,10 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
     return (
       <div className={styles.todoCard}>
         <div className={styles.editGroup}>
-          <label className={styles.editLabel}>Title</label>
+          <div className={styles.editLabelRow}>
+            <label className={styles.editLabel}>Title</label>
+            <span className={styles.requiredBadge}>Required</span>
+          </div>
           <input
             type="text"
             value={editTitle}
