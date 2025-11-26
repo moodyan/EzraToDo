@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
 using TodoApi.DTOs;
 using TodoApi.Exceptions;
+using TodoApi.Extensions;
 using TodoApi.Models;
 
 namespace TodoApi.Services;
@@ -18,29 +19,17 @@ public class TodoService : ITodoService
         _context = context;
     }
 
-    public async Task<IEnumerable<TodoResponse>> GetAllAsync(bool? isCompleted = null, int? priority = null)
+    public async Task<IEnumerable<TodoResponse>> GetAllAsync(TodoFilter? filter = null)
     {
-        var query = _context.TodoItems.AsQueryable();
-
-        // Apply filters
-        if (isCompleted.HasValue)
-        {
-            query = query.Where(t => t.IsCompleted == isCompleted.Value);
-        }
-
-        if (priority.HasValue)
-        {
-            query = query.Where(t => (int)t.Priority == priority.Value);
-        }
-
-        // Order by: incomplete items first, then by priority (highest first), then by due date
-        query = query
+        var items = await _context.TodoItems
+            .WhereIf(filter?.IsCompleted.HasValue == true, t => t.IsCompleted == filter!.IsCompleted!.Value)
+            .WhereIf(filter?.Priority.HasValue == true, t => (int)t.Priority == filter!.Priority!.Value)
             .OrderBy(t => t.IsCompleted)
             .ThenByDescending(t => t.Priority)
             .ThenBy(t => t.DueDate ?? DateTime.MaxValue)
-            .ThenByDescending(t => t.CreatedAt);
+            .ThenByDescending(t => t.CreatedAt)
+            .ToListAsync();
 
-        var items = await query.ToListAsync();
         return items.Select(MapToResponse);
     }
 

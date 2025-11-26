@@ -7,7 +7,7 @@ namespace TodoApi.Services;
 /// </summary>
 public interface ITodoService
 {
-    Task<IEnumerable<TodoResponse>> GetAllAsync(bool? isCompleted = null, int? priority = null);
+    Task<IEnumerable<TodoResponse>> GetAllAsync(TodoFilter? filter = null);
     Task<TodoResponse> GetByIdAsync(int id);
     Task<TodoResponse> CreateAsync(CreateTodoRequest request);
     Task<TodoResponse> UpdateAsync(int id, UpdateTodoRequest request);
