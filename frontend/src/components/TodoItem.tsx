@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Select } from './Select';
 import { DatePicker } from './DatePicker';
+import { getPriorityOptions, formatDate } from '../utils/todoHelpers';
 import type { TodoItem as TodoItemType, UpdateTodoRequest } from '../types/todo';
-import { priorityColors, priorityLabels } from '../types/todo';
+import { priorityColors } from '../types/todo';
 import styles from './TodoItem.module.css';
 
 interface TodoItemProps {
@@ -40,11 +41,6 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
     setIsEditing(false);
   };
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return null;
-    return new Date(dateString).toLocaleDateString();
-  };
-
   if (isEditing) {
     return (
       <div className={styles.todoCard}>
@@ -66,10 +62,7 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
             <Select
               value={editPriority}
               onChange={(value) => setEditPriority(Number(value))}
-              options={Object.entries(priorityLabels).map(([value, label]) => ({
-                value: Number(value),
-                label,
-              }))}
+              options={getPriorityOptions()}
               className={styles.editSelect}
             />
           </div>

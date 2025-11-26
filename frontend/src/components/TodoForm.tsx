@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { Select } from './Select';
 import { DatePicker } from './DatePicker';
-import { priorityLabels } from '../types/todo';
+import { getPriorityOptions } from '../utils/todoHelpers';
 import type { CreateTodoRequest } from '../types/todo';
 import styles from './TodoForm.module.css';
 
@@ -47,21 +47,24 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
         className={styles.toggleButton}
+        aria-expanded={isExpanded}
+        aria-controls="todo-form"
       >
-        <span className={styles.toggleIcon}>{isExpanded ? '−' : '+'}</span>
+        <span className={styles.toggleIcon} aria-hidden="true">{isExpanded ? '−' : '+'}</span>
         <span className={styles.toggleText}>
           {isExpanded ? 'Hide New Todo Form' : 'Create New Todo'}
         </span>
       </button>
 
       {isExpanded && (
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form id="todo-form" onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <div className={styles.labelRow}>
-              <label className={styles.label}>Task Title</label>
+              <label htmlFor="todo-title" className={styles.label}>Task Title</label>
               <span className={styles.requiredBadge}>Required</span>
             </div>
             <input
+              id="todo-title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -74,10 +77,12 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
           </div>
 
           <div className={styles.formGroup}>
+            <label htmlFor="todo-description" className={styles.label}>Description (optional)</label>
             <textarea
+              id="todo-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description (optional)"
+              placeholder="Add details about this task..."
               maxLength={1000}
               disabled={isLoading}
               rows={3}
@@ -92,10 +97,7 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
                 value={priority}
                 onChange={(value) => setPriority(Number(value))}
                 disabled={isLoading}
-                options={Object.entries(priorityLabels).map(([value, label]) => ({
-                  value: Number(value),
-                  label,
-                }))}
+                options={getPriorityOptions()}
               />
             </div>
 
@@ -111,8 +113,9 @@ export function TodoForm({ onSubmit, isLoading }: TodoFormProps) {
           </div>
 
           <div className={styles.formGroup}>
-            <label className={styles.label}>Tags (comma-separated)</label>
+            <label htmlFor="todo-tags" className={styles.label}>Tags (comma-separated)</label>
             <input
+              id="todo-tags"
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}

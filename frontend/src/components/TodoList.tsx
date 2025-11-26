@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { TodoItem } from './TodoItem';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
 import { EmptyState } from './EmptyState';
 import { Select } from './Select';
 import { useTodos, useToggleTodo, useDeleteTodo, useUpdateTodo } from '../hooks/useTodos';
+import { getPriorityOptions } from '../utils/todoHelpers';
 import type { UpdateTodoRequest } from '../types/todo';
-import { priorityLabels } from '../types/todo';
 import styles from './TodoList.module.css';
 
 type SortOption = 'createdAt' | 'priority' | 'dueDate' | 'title';
@@ -21,19 +21,19 @@ export function TodoList() {
   const deleteMutation = useDeleteTodo();
   const updateMutation = useUpdateTodo();
 
-  const handleToggle = (id: number) => {
+  const handleToggle = useCallback((id: number) => {
     toggleMutation.mutate(id);
-  };
+  }, [toggleMutation]);
 
-  const handleDelete = (id: number) => {
-    if (confirm('Are you sure you want to delete this todo?')) {
+  const handleDelete = useCallback((id: number) => {
+    if (window.confirm('Are you sure you want to delete this todo?')) {
       deleteMutation.mutate(id);
     }
-  };
+  }, [deleteMutation]);
 
-  const handleUpdate = (id: number, data: UpdateTodoRequest) => {
+  const handleUpdate = useCallback((id: number, data: UpdateTodoRequest) => {
     updateMutation.mutate({ id, data });
-  };
+  }, [updateMutation]);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -48,26 +48,30 @@ export function TodoList() {
     );
   }
 
-  // Sort todos based on selected option
-  const sortedTodos = todos ? [...todos].sort((a, b) => {
-    switch (sortBy) {
-      case 'priority':
-        // Higher priority (3) should come first
-        return b.priority - a.priority;
-      case 'dueDate':
-        // Sort by due date, with null dates at the end
-        if (!a.dueDate && !b.dueDate) return 0;
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
-        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
-      case 'title':
-        return a.title.localeCompare(b.title);
-      case 'createdAt':
-      default:
-        // Most recent first
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    }
-  }) : [];
+  // Sort todos based on selected option (memoized for performance)
+  const sortedTodos = useMemo(() => {
+    if (!todos) return [];
+
+    return [...todos].sort((a, b) => {
+      switch (sortBy) {
+        case 'priority':
+          // Higher priority (3) should come first
+          return b.priority - a.priority;
+        case 'dueDate':
+          // Sort by due date, with null dates at the end
+          if (!a.dueDate && !b.dueDate) return 0;
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        case 'title':
+          return a.title.localeCompare(b.title);
+        case 'createdAt':
+        default:
+          // Most recent first
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+    });
+  }, [todos, sortBy]);
 
   const stats = {
     total: todos?.length || 0,
@@ -125,10 +129,7 @@ export function TodoList() {
               }}
               options={[
                 { value: 'all', label: 'All Priorities' },
-                ...Object.entries(priorityLabels).map(([value, label]) => ({
-                  value: Number(value),
-                  label,
-                })),
+                ...getPriorityOptions(),
               ]}
             />
           </div>

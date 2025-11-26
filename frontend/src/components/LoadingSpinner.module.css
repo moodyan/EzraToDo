@@ -6,8 +6,8 @@
 }
 
 .spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
+  border: 4px solid #fffef2;
+  border-top: 4px solid #ffcf33;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -21,4 +21,17 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* Screen reader only class */
+:global(.sr-only) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
