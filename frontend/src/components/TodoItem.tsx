@@ -82,7 +82,11 @@ export function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
           </div>
         </div>
         <div className={styles.editActions}>
-          <button onClick={handleSave} className={`${styles.button} ${styles.saveButton}`}>
+          <button
+            onClick={handleSave}
+            disabled={!editTitle.trim()}
+            className={`${styles.button} ${styles.saveButton}`}
+          >
             Save
           </button>
           <button onClick={handleCancel} className={`${styles.button} ${styles.cancelButton}`}>
