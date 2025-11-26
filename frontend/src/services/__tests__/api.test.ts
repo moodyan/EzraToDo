@@ -3,7 +3,8 @@ import { todoApi, ApiError } from '../api';
 import type { CreateTodoRequest, UpdateTodoRequest } from '../../types/todo';
 
 // Mock fetch globally
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+vi.stubGlobal('fetch', mockFetch);
 
 describe('todoApi - Negative Scenarios', () => {
   beforeEach(() => {
@@ -13,7 +14,7 @@ describe('todoApi - Negative Scenarios', () => {
   describe('Error Handling', () => {
     it('should throw ApiError when API returns 404', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      const mockResponse = {
         ok: false,
         status: 404,
         json: async () => ({
@@ -21,7 +22,8 @@ describe('todoApi - Negative Scenarios', () => {
           statusCode: 404,
           traceId: 'test-trace-id',
         }),
-      });
+      };
+      mockFetch.mockResolvedValue(mockResponse);
 
       // Act & Assert
       await expect(todoApi.getById(999)).rejects.toThrow(ApiError);
@@ -30,7 +32,7 @@ describe('todoApi - Negative Scenarios', () => {
 
     it('should throw ApiError when API returns 400 for validation errors', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
         json: async () => ({
@@ -53,7 +55,7 @@ describe('todoApi - Negative Scenarios', () => {
 
     it('should throw ApiError when API returns 500', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
         json: async () => ({
@@ -68,7 +70,7 @@ describe('todoApi - Negative Scenarios', () => {
 
     it('should handle network failures', async () => {
       // Arrange
-      (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
       // Act & Assert
       await expect(todoApi.getAll()).rejects.toThrow('Network error');
@@ -76,7 +78,7 @@ describe('todoApi - Negative Scenarios', () => {
 
     it('should handle malformed JSON responses', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
         json: async () => {
@@ -95,7 +97,7 @@ describe('todoApi - Negative Scenarios', () => {
         Priority: ['Priority must be between 0 and 3'],
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
         json: async () => ({
@@ -129,7 +131,7 @@ describe('todoApi - Negative Scenarios', () => {
   describe('DELETE operation', () => {
     it('should handle 404 when deleting non-existent todo', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
         json: async () => ({
@@ -144,7 +146,7 @@ describe('todoApi - Negative Scenarios', () => {
 
     it('should handle successful deletion with 204 No Content', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 204,
         json: async () => {
@@ -163,7 +165,7 @@ describe('todoApi - Negative Scenarios', () => {
   describe('UPDATE operation', () => {
     it('should handle 404 when updating non-existent todo', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
         json: async () => ({
@@ -186,7 +188,7 @@ describe('todoApi - Negative Scenarios', () => {
   describe('TOGGLE operation', () => {
     it('should handle 404 when toggling non-existent todo', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
         json: async () => ({
@@ -205,7 +207,7 @@ describe('todoApi - Negative Scenarios', () => {
   describe('Query Parameters', () => {
     it('should build correct URL with filter parameters', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => [],
@@ -215,17 +217,17 @@ describe('todoApi - Negative Scenarios', () => {
       await todoApi.getAll(true, 2);
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('isCompleted=true')
       );
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('priority=2')
       );
     });
 
     it('should handle empty results', async () => {
       // Arrange
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => [],

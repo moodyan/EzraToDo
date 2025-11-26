@@ -8,6 +8,7 @@ export function useTodos(isCompleted?: boolean, priority?: number) {
   return useQuery({
     queryKey: [TODOS_QUERY_KEY, { isCompleted, priority }],
     queryFn: () => todoApi.getAll(isCompleted, priority),
+    placeholderData: (previousData) => previousData,
   });
 }
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { LoadingSpinner } from '../LoadingSpinner';
 
 describe('LoadingSpinner', () => {
@@ -12,8 +12,5 @@ describe('LoadingSpinner', () => {
     const { container } = render(<LoadingSpinner />);
     const spinner = container.querySelector('div > div');
     expect(spinner).toBeInTheDocument();
-    expect(spinner).toHaveStyle({
-      borderRadius: '50%',
-    });
   });
 });

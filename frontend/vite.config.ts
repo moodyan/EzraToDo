@@ -13,6 +13,9 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', '@tanstack/react-query'],
+  },
   test: {
     globals: true,
     environment: 'jsdom',

@@ -19,20 +19,20 @@
 
 .actionButton {
   padding: 0.75rem 1.5rem;
-  background-color: #3498db;
-  color: white;
+  background-color: #ffcf33;
+  color: #252218;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 207, 51, 0.3);
 }
 
 .actionButton:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  background-color: #f0c030;
+  box-shadow: 0 6px 20px rgba(255, 207, 51, 0.5);
 }
 
 .actionButton:active {
