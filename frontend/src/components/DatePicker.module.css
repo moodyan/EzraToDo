@@ -123,18 +123,29 @@
   border-color: #252218;
 }
 
-:global(.react-datepicker__close-icon::after) {
-  background-color: #3d3328;
-  color: white;
-  font-size: 1.2rem;
+:global(.react-datepicker__close-icon) {
+  right: 8px;
   padding: 0;
-  width: 20px;
-  height: 20px;
-  line-height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-:global(.react-datepicker__close-icon::after:hover) {
-  background-color: #252218;
+:global(.react-datepicker__close-icon::after) {
+  background-color: #e74c3c;
+  color: white;
+  font-size: 0.9rem;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(.react-datepicker__close-icon:hover::after) {
+  background-color: #c0392b;
 }
 
 :global(.react-datepicker__triangle) {

@@ -2,7 +2,7 @@
 
 A production-ready, full-stack todo task management application built with .NET Core and React. This project demonstrates clean architecture, best practices, and professional development standards.
 
-## 🎯 Project Overview
+## Project Overview
 
 This application showcases:
 - **Clean Architecture**: Separation of concerns with DTOs, Services, and Controllers
@@ -10,10 +10,11 @@ This application showcases:
 - **Error Handling**: Global exception handling with consistent error responses
 - **Type Safety**: Full TypeScript implementation on the frontend
 - **State Management**: React Query for efficient data caching and synchronization
+- **Security**: Rate limiting, CORS restrictions, and input sanitization
 - **Testing**: Unit tests for both backend and frontend
 - **API Documentation**: Interactive Swagger/OpenAPI documentation
 
-## 🏗️ Architecture
+## Architecture
 
 ### Backend (.NET Core 8.0)
 ```
@@ -24,32 +25,34 @@ backend/TodoApi/
 ├── DTOs/              # Data Transfer Objects (API contracts)
 ├── Validators/        # FluentValidation validators
 ├── Middleware/        # Global exception handler
+├── Migrations/        # EF Core database migrations
 └── Data/              # EF Core DbContext
 ```
 
 **Key Design Decisions:**
-- ✅ **DTOs for API Contracts**: Never expose EF entities directly
-- ✅ **Service Layer**: Keeps controllers thin, business logic centralized
-- ✅ **Repository Pattern via EF Core**: DbContext acts as unit of work
-- ✅ **Dependency Injection**: All services registered with DI container
+- DTOs for API Contracts: Never expose EF entities directly
+- Service Layer: Keeps controllers thin, business logic centralized
+- Repository Pattern via EF Core: DbContext acts as unit of work
+- Dependency Injection: All services registered with DI container
 
 ### Frontend (React + TypeScript)
 ```
 frontend/src/
 ├── components/        # React components (modular, reusable)
-├── hooks/             # Custom React Query hooks
+├── hooks/             # Custom React Query hooks and context providers
 ├── services/          # API client functions
 ├── types/             # TypeScript type definitions
-└── utils/             # Utility functions
+└── utils/             # Utility functions including sanitization
 ```
 
 **Key Design Decisions:**
-- ✅ **React Query**: Automatic caching, background refetching, optimistic updates
-- ✅ **Component Modularity**: Separation of concerns (presentation vs. logic)
-- ✅ **Error Boundaries**: Proper error and loading state handling
-- ✅ **Type Safety**: Full TypeScript coverage
+- React Query: Automatic caching, background refetching, optimistic updates
+- Component Modularity: Separation of concerns (presentation vs. logic)
+- Error Boundaries: Graceful error handling to prevent app crashes
+- Toast Notifications: User feedback for all operations
+- Type Safety: Full TypeScript coverage
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - .NET 8.0 SDK or later
@@ -128,7 +131,7 @@ npm run dev
 
 The frontend will be available at `http://localhost:5173`
 
-## 🧪 Running Tests
+## Running Tests
 
 ### Backend Tests
 ```bash
@@ -143,6 +146,7 @@ Tests cover:
 - Deleting todos
 - Toggle completion
 - Filtering by status and priority
+- Input validation
 
 ### Frontend Tests
 ```bash
@@ -156,7 +160,7 @@ Tests cover:
 - Error handling
 - Loading states
 
-## 📋 API Documentation
+## API Documentation
 
 Once the backend is running, visit `http://localhost:5000` to access the interactive Swagger UI.
 
@@ -183,7 +187,7 @@ backend/TodoApi/api-tests.http
 ```json
 POST /api/todos
 {
-  "title": "Complete the take-home test",
+  "title": "Complete the project",
   "description": "Build a production-ready todo app",
   "priority": 2,
   "dueDate": "2024-12-31T23:59:59Z",
@@ -195,7 +199,7 @@ POST /api/todos
 ```json
 {
   "id": 1,
-  "title": "Complete the take-home test",
+  "title": "Complete the project",
   "description": "Build a production-ready todo app",
   "isCompleted": false,
   "createdAt": "2024-01-15T10:30:00Z",
@@ -207,57 +211,66 @@ POST /api/todos
 }
 ```
 
-## ✨ Features
+## Features
 
 ### Core Features
-- ✅ Create, read, update, and delete todos
-- ✅ Mark todos as complete/incomplete
-- ✅ Set priority levels (Low, Medium, High, Urgent)
-- ✅ Add due dates
-- ✅ Tag todos for organization
-- ✅ Filter by completion status
-- ✅ Filter by priority level
+- Create, read, update, and delete todos
+- Mark todos as complete/incomplete
+- Set priority levels (Low, Medium, High, Urgent)
+- Add due dates with validation
+- Tag todos for organization
+- Filter by completion status
+- Filter by priority level
+- Sort by date created, priority, due date, or title
+
+### Security Features
+- Rate limiting (configurable requests per time window)
+- CORS restrictions with configurable origins
+- Input sanitization to prevent XSS
+- Due date validation (prevents past dates)
 
 ### Production-Ready Features
-- ✅ Input validation with helpful error messages
-- ✅ Global error handling
-- ✅ Loading states throughout the UI
-- ✅ Empty states when no data exists
-- ✅ Error states with retry functionality
-- ✅ Responsive design
-- ✅ Optimistic UI updates
-- ✅ Data caching and invalidation
-- ✅ SQLite database (persistent, reproducible)
-- ✅ Database migrations
-- ✅ CORS configuration
-- ✅ Structured logging
+- Input validation with helpful error messages
+- Global error handling
+- Error boundaries for graceful failure recovery
+- Toast notifications for user feedback
+- Loading states throughout the UI
+- Empty states when no data exists
+- Error states with retry functionality
+- Responsive design
+- Data caching and invalidation
+- SQLite database (persistent, reproducible)
+- Database migrations
 
-## 🎨 Frontend Features
+## Frontend Features
 
 - **Loading States**: Spinners while data is loading
 - **Error States**: Clear error messages with retry buttons
 - **Empty States**: Friendly messages when no todos exist
 - **Filters**: Filter by completion status and priority
+- **Sorting**: Sort by date, priority, due date, or title
 - **Statistics**: Real-time counts of total, pending, and completed todos
 - **Inline Editing**: Edit todos directly in the list
-- **Confirmation Dialogs**: Prevent accidental deletions
+- **Confirmation Dialogs**: Modal dialogs to prevent accidental deletions
+- **Toast Notifications**: Success and error feedback for all operations
 - **Visual Priority Indicators**: Color-coded priority badges
-- **Tag Management**: Visual tag display and management
+- **Tag Management**: Visual tag display
 
-## 🔐 Validation
+## Validation
 
 ### Backend Validation
 - Title: Required, max 200 characters
 - Description: Max 1000 characters
 - Priority: Must be 0-3
-- Due Date: Cannot be in the past
+- Due Date: Cannot be in the past (enforced on create and update)
 
 ### Frontend Validation
 - Real-time validation feedback
 - Disabled submit buttons for invalid input
 - Max length enforcement on inputs
+- HTML tag stripping for XSS prevention
 
-## 🛡️ Error Handling
+## Error Handling
 
 ### Backend
 - Global exception handler middleware
@@ -266,15 +279,31 @@ POST /api/todos
 - Trace IDs for debugging
 
 ### Frontend
-- Try-catch blocks in async operations
 - Error boundaries for component failures
+- Toast notifications for operation feedback
 - User-friendly error messages
-- Retry mechanisms
+- Retry mechanisms for failed operations
 
-## 📊 Trade-offs and Assumptions
+## Configuration
+
+### Backend Configuration (appsettings.json)
+
+```json
+{
+  "Cors": {
+    "AllowedOrigins": ["http://localhost:5173", "http://localhost:3000"]
+  },
+  "RateLimiting": {
+    "PermitLimit": 100,
+    "WindowSeconds": 60
+  }
+}
+```
+
+## Trade-offs and Assumptions
 
 ### Assumptions
-1. **Single User**: No authentication/authorization implemented (out of scope)
+1. **Single User**: No authentication/authorization implemented
 2. **Local Database**: SQLite for simplicity and reproducibility
 3. **Simple Tags**: Tags stored as comma-separated strings (not normalized)
 4. **No Pagination**: Assumes reasonable number of todos per user
@@ -282,95 +311,68 @@ POST /api/todos
 
 ### Trade-offs
 
-#### ✅ Chose Simplicity Over Complexity
-- **SQLite over PostgreSQL**: Easier setup, reproducible, sufficient for demo
-- **Inline editing over modal**: Better UX but slightly more complex component
-- **Service layer over repository pattern**: Less boilerplate, EF Core is already abstracted
+**Simplicity Over Complexity**
+- SQLite over PostgreSQL: Easier setup, reproducible, sufficient for demo
+- Inline editing over modal: Better UX, more natural workflow
+- Service layer over repository pattern: Less boilerplate, EF Core is already abstracted
 
-#### ✅ Chose Performance Over Features
-- **React Query over Redux**: Built-in caching, less boilerplate
-- **No virtual scrolling**: Simpler implementation, sufficient for expected data size
-- **Client-side filtering**: Reduces API calls, works well for small datasets
+**Performance Over Features**
+- React Query over Redux: Built-in caching, less boilerplate
+- No virtual scrolling: Simpler implementation, sufficient for expected data size
+- Client-side sorting: Reduces API calls, works well for small datasets
 
-#### ✅ Chose Testability
-- **Dependency Injection**: Makes testing easier
-- **Service separation**: Can mock services in controller tests
-- **Component modularity**: Each component testable in isolation
+**Testability**
+- Dependency Injection: Makes testing easier
+- Service separation: Can mock services in controller tests
+- Component modularity: Each component testable in isolation
 
-## 🚀 Future Improvements
+## Future Improvements
 
 ### High Priority
-1. **Authentication & Authorization**: User accounts, JWT tokens
-2. **Pagination**: API pagination for large datasets
-3. **Search**: Full-text search across titles and descriptions
-4. **Sorting**: Custom sort orders (by date, priority, title)
-5. **Subtasks**: Nested todo items
-6. **Categories/Projects**: Group todos into projects
+1. Authentication and Authorization: User accounts, JWT tokens
+2. Pagination: API pagination for large datasets
+3. Search: Full-text search across titles and descriptions
+4. Subtasks: Nested todo items
+5. Categories/Projects: Group todos into projects
 
 ### Medium Priority
-7. **Notifications**: Due date reminders
-8. **Recurring Tasks**: Daily, weekly, monthly tasks
-9. **File Attachments**: Upload files to todos
-10. **Activity Log**: Track changes and history
-11. **Dark Mode**: Theme toggle
-12. **Bulk Operations**: Select multiple todos for bulk actions
+6. Notifications: Due date reminders
+7. Recurring Tasks: Daily, weekly, monthly tasks
+8. File Attachments: Upload files to todos
+9. Activity Log: Track changes and history
+10. Dark Mode: Theme toggle
+11. Bulk Operations: Select multiple todos for bulk actions
 
-### Performance & Scalability
-13. **Caching**: Redis for distributed caching
-14. **Rate Limiting**: Protect API from abuse
-15. **Database Optimization**: Indexes on frequently queried columns
-16. **API Versioning**: Support multiple API versions
-17. **GraphQL**: Alternative to REST for flexible queries
+### Performance and Scalability
+12. Caching: Redis for distributed caching
+13. Database Optimization: Indexes on frequently queried columns
+14. API Versioning: Support multiple API versions
 
-### DevOps & Monitoring
-18. **Docker**: Containerize both frontend and backend
-19. **CI/CD**: Automated testing and deployment
-20. **Application Insights**: Monitoring and telemetry
-21. **Health Checks**: Endpoint for monitoring system health
-22. **Logging**: Structured logging with Serilog
-23. **API Gateway**: If microservices architecture is needed
+### DevOps and Monitoring
+15. Docker: Containerize both frontend and backend
+16. CI/CD: Automated testing and deployment
+17. Health Checks: Endpoint for monitoring system health
+18. Structured Logging: Serilog integration
 
 ### Testing
-24. **Integration Tests**: Test full request/response cycle
-25. **E2E Tests**: Playwright or Cypress tests
-26. **Load Testing**: Performance under load
-27. **Code Coverage**: Aim for 80%+ coverage
+19. Integration Tests: Test full request/response cycle
+20. E2E Tests: Playwright or Cypress tests
+21. Load Testing: Performance under load
 
-## 🏆 Highlights
+## Code Quality
 
-### What Makes This Submission Stand Out
+- No EF entities exposed in API responses
+- Thin controllers with business logic in services
+- Input validation on all endpoints
+- Consistent error response format
+- React Query for optimal data management
+- Modular, reusable components
+- Proper TypeScript types throughout
+- Clear naming conventions
 
-1. **Production-Ready Code**: Not just functional, but maintainable and scalable
-2. **Clean Architecture**: Clear separation of concerns, easy to extend
-3. **Comprehensive Error Handling**: Never leaves users in the dark
-4. **User Experience**: Loading, error, and empty states throughout
-5. **Type Safety**: Full TypeScript coverage prevents runtime errors
-6. **Documentation**: Clear README with setup instructions and reasoning
-7. **Testing**: Both backend and frontend tests included
-8. **API Documentation**: Interactive Swagger UI for easy API exploration
-9. **Best Practices**: Follows .NET and React best practices
+## License
 
-### Code Quality
-- ✅ No EF entities exposed in API responses
-- ✅ Thin controllers with business logic in services
-- ✅ Input validation on all endpoints
-- ✅ Consistent error response format
-- ✅ React Query for optimal data management
-- ✅ Modular, reusable components
-- ✅ Proper TypeScript types throughout
-- ✅ Clear naming conventions
-
-## 📝 License
-
-MIT License - See LICENSE file for details
-
-## 👤 Author
-
-This project was created as a take-home test for a Full Stack Developer position, demonstrating expertise in:
-- Backend: .NET Core, Entity Framework, Clean Architecture
-- Frontend: React, TypeScript, React Query
-- Best Practices: Testing, Documentation, Error Handling
-- Production Readiness: Validation, Logging, User Experience
+MIT License - See LICENSE file for details.
 
 ---
 
