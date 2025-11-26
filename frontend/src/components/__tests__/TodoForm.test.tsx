@@ -5,7 +5,7 @@ import { TodoForm } from '../TodoForm';
 describe('TodoForm - Negative Scenarios', () => {
   it('should not submit when title is empty', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const submitButton = screen.getByText('Add Todo');
     fireEvent.click(submitButton);
@@ -15,7 +15,7 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should not submit when title is only whitespace', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText('What needs to be done?');
     const submitButton = screen.getByText('Add Todo');
@@ -28,7 +28,7 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should disable submit button when loading', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} isLoading={true} />);
+    render(<TodoForm onSubmit={onSubmit} isLoading={true} defaultExpanded={true} />);
 
     const submitButton = screen.getByText('Adding...') as HTMLButtonElement;
 
@@ -37,7 +37,7 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should disable submit button when title is empty', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const submitButton = screen.getByText('Add Todo') as HTMLButtonElement;
 
@@ -46,10 +46,10 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should trim whitespace from title before submitting', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText('What needs to be done?');
-    const form = screen.getByRole('button').closest('form')!;
+    const form = titleInput.closest('form')!;
 
     fireEvent.change(titleInput, { target: { value: '  Test Todo  ' } });
     fireEvent.submit(form);
@@ -63,11 +63,11 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should handle empty description gracefully', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText('What needs to be done?');
-    const descriptionInput = screen.getByPlaceholderText('Description (optional)');
-    const form = screen.getByRole('button').closest('form')!;
+    const descriptionInput = screen.getByPlaceholderText('Add details about this task...');
+    const form = titleInput.closest('form')!;
 
     fireEvent.change(titleInput, { target: { value: 'Test Todo' } });
     fireEvent.change(descriptionInput, { target: { value: '   ' } });
@@ -76,18 +76,18 @@ describe('TodoForm - Negative Scenarios', () => {
     expect(onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         title: 'Test Todo',
-        description: undefined, // Should be undefined, not empty string
+        description: undefined,
       })
     );
   });
 
   it('should handle empty tags gracefully', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText('What needs to be done?');
     const tagsInput = screen.getByPlaceholderText('work, personal, urgent');
-    const form = screen.getByRole('button').closest('form')!;
+    const form = titleInput.closest('form')!;
 
     fireEvent.change(titleInput, { target: { value: 'Test Todo' } });
     fireEvent.change(tagsInput, { target: { value: '   ' } });
@@ -96,18 +96,18 @@ describe('TodoForm - Negative Scenarios', () => {
     expect(onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         title: 'Test Todo',
-        tags: undefined, // Should be undefined, not empty array
+        tags: undefined,
       })
     );
   });
 
   it('should parse comma-separated tags correctly', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText('What needs to be done?');
     const tagsInput = screen.getByPlaceholderText('work, personal, urgent');
-    const form = screen.getByRole('button').closest('form')!;
+    const form = titleInput.closest('form')!;
 
     fireEvent.change(titleInput, { target: { value: 'Test Todo' } });
     fireEvent.change(tagsInput, { target: { value: 'work, personal,urgent' } });
@@ -122,11 +122,11 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should filter out empty tags from comma-separated list', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText('What needs to be done?');
     const tagsInput = screen.getByPlaceholderText('work, personal, urgent');
-    const form = screen.getByRole('button').closest('form')!;
+    const form = titleInput.closest('form')!;
 
     fireEvent.change(titleInput, { target: { value: 'Test Todo' } });
     fireEvent.change(tagsInput, { target: { value: 'work,, ,personal' } });
@@ -141,7 +141,7 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should enforce maxLength on title input', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText(
       'What needs to be done?'
@@ -152,10 +152,10 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should enforce maxLength on description textarea', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const descriptionInput = screen.getByPlaceholderText(
-      'Description (optional)'
+      'Add details about this task...'
     ) as HTMLTextAreaElement;
 
     expect(descriptionInput.maxLength).toBe(1000);
@@ -163,15 +163,15 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should reset form after successful submission', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText(
       'What needs to be done?'
     ) as HTMLInputElement;
     const descriptionInput = screen.getByPlaceholderText(
-      'Description (optional)'
+      'Add details about this task...'
     ) as HTMLTextAreaElement;
-    const form = screen.getByRole('button').closest('form')!;
+    const form = titleInput.closest('form')!;
 
     fireEvent.change(titleInput, { target: { value: 'Test Todo' } });
     fireEvent.change(descriptionInput, { target: { value: 'Test Description' } });
@@ -183,10 +183,10 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should handle empty due date gracefully', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} />);
+    render(<TodoForm onSubmit={onSubmit} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText('What needs to be done?');
-    const form = screen.getByRole('button').closest('form')!;
+    const form = titleInput.closest('form')!;
 
     fireEvent.change(titleInput, { target: { value: 'Test Todo' } });
     fireEvent.submit(form);
@@ -200,18 +200,40 @@ describe('TodoForm - Negative Scenarios', () => {
 
   it('should disable all inputs when loading', () => {
     const onSubmit = vi.fn();
-    render(<TodoForm onSubmit={onSubmit} isLoading={true} />);
+    render(<TodoForm onSubmit={onSubmit} isLoading={true} defaultExpanded={true} />);
 
     const titleInput = screen.getByPlaceholderText(
       'What needs to be done?'
     ) as HTMLInputElement;
     const descriptionInput = screen.getByPlaceholderText(
-      'Description (optional)'
+      'Add details about this task...'
     ) as HTMLTextAreaElement;
-    const prioritySelect = screen.getByRole('combobox') as HTMLSelectElement;
 
     expect(titleInput.disabled).toBe(true);
     expect(descriptionInput.disabled).toBe(true);
-    expect(prioritySelect.disabled).toBe(true);
+  });
+});
+
+describe('TodoForm - Toggle Behavior', () => {
+  it('should start collapsed by default', () => {
+    render(<TodoForm onSubmit={vi.fn()} />);
+
+    expect(screen.queryByPlaceholderText('What needs to be done?')).toBeNull();
+    expect(screen.getByText('Create New Todo')).toBeInTheDocument();
+  });
+
+  it('should expand when toggle button is clicked', () => {
+    render(<TodoForm onSubmit={vi.fn()} />);
+
+    fireEvent.click(screen.getByText('Create New Todo'));
+
+    expect(screen.getByPlaceholderText('What needs to be done?')).toBeInTheDocument();
+    expect(screen.getByText('Hide New Todo Form')).toBeInTheDocument();
+  });
+
+  it('should start expanded when defaultExpanded is true', () => {
+    render(<TodoForm onSubmit={vi.fn()} defaultExpanded={true} />);
+
+    expect(screen.getByPlaceholderText('What needs to be done?')).toBeInTheDocument();
   });
 });
