@@ -90,9 +90,8 @@ cd backend/TodoApi
 dotnet restore
 ```
 
-3. Create and apply database migrations:
+3. Apply database migrations:
 ```bash
-dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 
