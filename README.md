@@ -1,6 +1,6 @@
 # Todo Task Management Application
 
-A production-ready, full-stack todo task management application built with .NET Core and React. This project demonstrates clean architecture, best practices, and professional development standards.
+A production-ready, full-stack todo task management application built with .NET and React. This project demonstrates clean architecture, best practices, and professional development standards.
 
 ## Project Overview
 
@@ -16,7 +16,7 @@ This application showcases:
 
 ## Architecture
 
-### Backend (.NET Core 8.0)
+### Backend (.NET 8.0)
 ```
 backend/TodoApi/
 ├── Controllers/       # Thin controllers (API endpoints)
@@ -291,6 +291,49 @@ POST /api/todos
   }
 }
 ```
+## My Thought Process
+
+### Architecture Decisions
+The backend uses .NET 8 (the current release of .NET Core) with Entity Framework Core and SQLite. I chose SQLite over an in-memory database because it provides persistence between sessions while remaining zero-configuration.
+
+For the frontend, I selected React over Vue primarily because of TypeScript integration. While both frameworks support TypeScript well, React's ecosystem has more mature TypeScript tooling and type definitions. React's component model also aligns naturally with the unidirectional data flow I wanted for this application, making state changes predictable and easier to debug. I also have never used React or Vue (I use Angular at my job currently) and I was most interested in learning React.
+
+For state management, I chose React Query rather than a more traditional solution like Redux. React Query provides caching, background refetching, and optimistic updates with significantly less boilerplate, which is well-suited to an application where most state lives on the server.
+
+The backend follows a clean layered architecture: Controllers handle HTTP concerns, Services contain business logic, and DTOs define the API contracts. Entity Framework entities are never exposed directly to the API—this separation allows the database schema to evolve independently from the API contract.
+
+### User Experience Considerations
+I invested effort into the small interactions that make an application feel polished. The create form collapses by default when todos exist to reduce visual clutter, but auto-expands when the list is empty to guide new users. Editing happens inline rather than in a modal because it creates a more natural workflow (and made the most sense for this project).
+
+For validation, I replaced the browser's default tooltip with a custom "Required" indicator. Native validation renders differently across browsers and does not match the application's visual style. The save button disables when required fields are empty, providing immediate feedback without intrusive error messages.
+
+Confirmation dialogs protect against accidental deletions.
+
+### Handling Timezones
+One notable challenge involved due date handling. During testing, I observed that selecting December 25th would occasionally display as December 24th, and selecting the current day would result in an exception. This occurs because JavaScript dates include timezone information, and UTC conversion on the server can shift dates backward.
+
+The solution was to use DateOnly on the backend (which carries no time component) and transmit the user's timezone offset from the frontend. This ensures the date selected by the user is the date that gets persisted, regardless of their geographic location.
+
+### Styling Approach
+I began with inline styles for rapid iteration, then refactored to CSS Modules for production readiness. CSS Modules provide scoped styles without the naming collision issues of global CSS, while remaining more maintainable than inline styles distributed throughout components.
+
+Native HTML select elements and date pickers render inconsistently across browsers. I replaced them with Radix UI dropdowns and react-datepicker to ensure visual consistency across Chrome, Firefox, and Safari. This added complexity, but the uniform appearance justified the trade-off.
+
+### Security and Error Handling
+Even for a demonstration application, I wanted to show awareness of production security concerns. The backend implements rate limiting to prevent abuse and CORS restrictions to control which origins can access the API. The frontend sanitizes input to prevent XSS attacks by stripping HTML tags before transmission to the server.
+
+For error handling, I implemented a global exception handler on the backend that returns consistent error responses with appropriate HTTP status codes. On the frontend, error boundaries prevent individual component failures from crashing the entire application, and toast notifications provide clear feedback when operations fail.
+
+### Trade-offs and Scope Decisions
+I made deliberate decisions about what to exclude. There is no authentication because it would add significant complexity without demonstrating anything new about todo management. There is no pagination because a single-user todo application is unlikely to contain thousands of items. There is no WebSocket-based real-time synchronization because with a single user, no external modifications will occur while viewing the application.
+
+I prioritized doing the core functionality well rather than spreading effort across features that add limited value for this use case.
+
+### Future Improvements
+The most valuable additions would be authentication for multi-user support, pagination for large datasets, and search functionality for quickly locating specific items. I would also add Docker configuration for simplified deployment and end-to-end tests with Playwright or Cypress for comprehensive user flow validation.
+
+For a production MVP of a personal todo application, however, I believe the current implementation covers the essentials: reliable CRUD operations, thoughtful validation, clear error handling, and responsive design that provides a good user experience across device sizes.
+
 
 ## Trade-offs and Assumptions
 
