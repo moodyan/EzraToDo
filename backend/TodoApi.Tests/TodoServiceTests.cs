@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
 using TodoApi.DTOs;
+using TodoApi.Exceptions;
 using TodoApi.Services;
 using Xunit;
 
@@ -69,17 +70,14 @@ public class TodoServiceTests
     }
 
     [Fact]
-    public async Task GetByIdAsync_ShouldReturnNull_WhenNotExists()
+    public async Task GetByIdAsync_ShouldThrowNotFoundException_WhenNotExists()
     {
         // Arrange
         using var context = CreateInMemoryContext();
         var service = new TodoService(context);
 
-        // Act
-        var result = await service.GetByIdAsync(999);
-
-        // Assert
-        Assert.Null(result);
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => service.GetByIdAsync(999));
     }
 
     [Fact]
@@ -147,12 +145,10 @@ public class TodoServiceTests
         });
 
         // Act
-        var deleted = await service.DeleteAsync(created.Id);
+        await service.DeleteAsync(created.Id);
 
         // Assert
-        Assert.True(deleted);
-        var result = await service.GetByIdAsync(created.Id);
-        Assert.Null(result);
+        await Assert.ThrowsAsync<NotFoundException>(() => service.GetByIdAsync(created.Id));
     }
 
     [Fact]
@@ -167,8 +163,8 @@ public class TodoServiceTests
         await service.ToggleCompleteAsync(todo1.Id); // Mark first as completed
 
         // Act
-        var incompleteTodos = await service.GetAllAsync(isCompleted: false);
-        var completedTodos = await service.GetAllAsync(isCompleted: true);
+        var incompleteTodos = await service.GetAllAsync(new TodoFilter { IsCompleted = false });
+        var completedTodos = await service.GetAllAsync(new TodoFilter { IsCompleted = true });
 
         // Assert
         Assert.Single(incompleteTodos);
@@ -186,7 +182,7 @@ public class TodoServiceTests
         await service.CreateAsync(new CreateTodoRequest { Title = "High Priority", Priority = 2 });
 
         // Act
-        var highPriorityTodos = await service.GetAllAsync(priority: 2);
+        var highPriorityTodos = await service.GetAllAsync(new TodoFilter { Priority = 2 });
 
         // Assert
         Assert.Single(highPriorityTodos);
@@ -196,48 +192,37 @@ public class TodoServiceTests
     // ====== NEGATIVE SCENARIO TESTS ======
 
     [Fact]
-    public async Task UpdateAsync_ShouldReturnNull_WhenTodoDoesNotExist()
+    public async Task UpdateAsync_ShouldThrowNotFoundException_WhenTodoDoesNotExist()
     {
         // Arrange
         using var context = CreateInMemoryContext();
         var service = new TodoService(context);
 
-        // Act
-        var result = await service.UpdateAsync(999, new UpdateTodoRequest
-        {
-            Title = "Updated Title"
-        });
-
-        // Assert
-        Assert.Null(result);
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() =>
+            service.UpdateAsync(999, new UpdateTodoRequest { Title = "Updated Title" }));
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldReturnFalse_WhenTodoDoesNotExist()
+    public async Task DeleteAsync_ShouldThrowNotFoundException_WhenTodoDoesNotExist()
     {
         // Arrange
         using var context = CreateInMemoryContext();
         var service = new TodoService(context);
 
-        // Act
-        var result = await service.DeleteAsync(999);
-
-        // Assert
-        Assert.False(result);
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => service.DeleteAsync(999));
     }
 
     [Fact]
-    public async Task ToggleCompleteAsync_ShouldReturnNull_WhenTodoDoesNotExist()
+    public async Task ToggleCompleteAsync_ShouldThrowNotFoundException_WhenTodoDoesNotExist()
     {
         // Arrange
         using var context = CreateInMemoryContext();
         var service = new TodoService(context);
 
-        // Act
-        var result = await service.ToggleCompleteAsync(999);
-
-        // Assert
-        Assert.Null(result);
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => service.ToggleCompleteAsync(999));
     }
 
     [Fact]
@@ -345,7 +330,7 @@ public class TodoServiceTests
         await service.CreateAsync(new CreateTodoRequest { Title = "Todo 1", Priority = 0 });
 
         // Act - Filter for priority 3 (Urgent) when only priority 0 exists
-        var result = await service.GetAllAsync(priority: 3);
+        var result = await service.GetAllAsync(new TodoFilter { Priority = 3 });
 
         // Assert
         Assert.Empty(result);
@@ -365,7 +350,7 @@ public class TodoServiceTests
         await service.ToggleCompleteAsync(todo1.Id); // Complete first high-priority todo
 
         // Act - Get completed todos with priority 2
-        var result = await service.GetAllAsync(isCompleted: true, priority: 2);
+        var result = await service.GetAllAsync(new TodoFilter { IsCompleted = true, Priority = 2 });
 
         // Assert
         Assert.Single(result);

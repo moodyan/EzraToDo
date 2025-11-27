@@ -45,6 +45,13 @@ public class TodoDbContext : DbContext
             entity.Property(e => e.Tags)
                 .HasMaxLength(500);
 
+            // Configure DateOnly conversion for SQLite (stores as TEXT)
+            entity.Property(e => e.DueDate)
+                .HasConversion(
+                    v => v.HasValue ? v.Value.ToString("yyyy-MM-dd") : null,
+                    v => v != null ? DateOnly.Parse(v) : null
+                );
+
             // Create index for common queries
             entity.HasIndex(e => e.IsCompleted);
             entity.HasIndex(e => e.CreatedAt);

@@ -17,7 +17,7 @@ public class TodoResponse
 
     public DateTime? CompletedAt { get; set; }
 
-    public DateTime? DueDate { get; set; }
+    public DateOnly? DueDate { get; set; }
 
     public int Priority { get; set; }
 

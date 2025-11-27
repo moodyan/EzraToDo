@@ -17,17 +17,9 @@ public class TodoItem
 
     public DateTime? CompletedAt { get; set; }
 
-    public DateTime? DueDate { get; set; }
+    public DateOnly? DueDate { get; set; }
 
     public TodoPriority Priority { get; set; } = TodoPriority.Medium;
 
     public string? Tags { get; set; } // Stored as comma-separated values
-}
-
-public enum TodoPriority
-{
-    Low = 0,
-    Medium = 1,
-    High = 2,
-    Urgent = 3
 }

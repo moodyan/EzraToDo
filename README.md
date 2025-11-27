@@ -182,7 +182,7 @@ POST /api/todos
   "title": "Complete the project",
   "description": "Build a production-ready todo app",
   "priority": 2,
-  "dueDate": "2024-12-31T23:59:59Z",
+  "dueDate": "2024-12-31",
   "tags": ["work", "urgent"]
 }
 ```
@@ -196,7 +196,7 @@ POST /api/todos
   "isCompleted": false,
   "createdAt": "2024-01-15T10:30:00Z",
   "completedAt": null,
-  "dueDate": "2024-12-31T23:59:59Z",
+  "dueDate": "2024-12-31",
   "priority": 2,
   "priorityLabel": "High",
   "tags": ["work", "urgent"]
@@ -283,7 +283,7 @@ POST /api/todos
 ```json
 {
   "Cors": {
-    "AllowedOrigins": ["http://localhost:5173", "http://localhost:3000"]
+    "AllowedOrigins": ["http://localhost:5173", "http://localhost:4173", "http://localhost:3000"]
   },
   "RateLimiting": {
     "PermitLimit": 100,

@@ -24,19 +24,16 @@ public class TodosController : ControllerBase
     /// <summary>
     /// Get all todo items with optional filters
     /// </summary>
-    /// <param name="isCompleted">Filter by completion status</param>
-    /// <param name="priority">Filter by priority (0-3)</param>
+    /// <param name="filter">Filter parameters</param>
     /// <returns>List of todo items</returns>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<TodoResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<TodoResponse>>> GetAll(
-        [FromQuery] bool? isCompleted = null,
-        [FromQuery] int? priority = null)
+    public async Task<ActionResult<IEnumerable<TodoResponse>>> GetAll([FromQuery] TodoFilter? filter)
     {
         _logger.LogInformation("Getting all todos with filters - IsCompleted: {IsCompleted}, Priority: {Priority}",
-            isCompleted, priority);
+            filter?.IsCompleted, filter?.Priority);
 
-        var todos = await _todoService.GetAllAsync(isCompleted, priority);
+        var todos = await _todoService.GetAllAsync(filter);
         return Ok(todos);
     }
 
