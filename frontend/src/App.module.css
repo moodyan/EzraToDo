@@ -1,5 +1,6 @@
 .app {
   min-height: 100vh;
+  min-width: 320px;
   background: #fffef2;
   padding: 2.5rem 1rem;
   position: relative;
